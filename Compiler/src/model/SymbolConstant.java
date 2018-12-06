@@ -13,7 +13,7 @@ package model;
  */
 public class SymbolConstant extends Symbol{
 	private String type;
-	private float value; //coloca qual tipo para o valor da constante já que pode ser de vários tipos?
+	private String value; 
 	
 	public SymbolConstant(Token token) {
 		super(token);
