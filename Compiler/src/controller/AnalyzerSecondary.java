@@ -3,6 +3,7 @@ package controller;
 import java.util.LinkedList;
 
 import model.First;
+import model.SymbolConstant;
 import model.Token;
 import model.TokensFlow;
 import model.Util;
@@ -171,18 +172,32 @@ public class AnalyzerSecondary {
 			
 			return;
 		}
-
-		analiseConstAttribution();
-		analiseMoreConstants();
+		
+		//adicionar constantes à tabela de símbolos aqui
+		SymbolConstant constTemp = new SymbolConstant(TokensFlow.getToken());
+		String tipo = TokensFlow.back().getValue();
+		System.out.println("Adicionando constante do tipo " + tipo + " à tabela de símbolos" );
+		constTemp.setType(tipo);
+		analiseConstAttribution(constTemp);
+		analiseMoreConstants(tipo);
 		return;
 	}
 	
 	//<More Constants> ::= ',' <ConstAttribution> <More Constants> | ';' <New Declaration> 
-	public static void analiseMoreConstants() {
+	public static void analiseMoreConstants(String tipo) {
 		if(TokensFlow.hasNext() && TokensFlow.getToken().getValue().equals(",")) {
 			TokensFlow.next();
-			analiseConstAttribution();
-			analiseMoreConstants();
+			
+			//adicionar constantes à tabela de símbolos aqui
+			SymbolConstant constTemp = new SymbolConstant(TokensFlow.getToken());
+			System.out.println("Adicionando constante do tipo " + tipo + " à tabela de símbolos" );
+			constTemp.setType(tipo);
+
+			
+			
+			
+			analiseConstAttribution(constTemp);
+			analiseMoreConstants(tipo);
 			return;
 		} else if(TokensFlow.hasNext() && TokensFlow.getToken().getValue().equals(";")) {
 			TokensFlow.next();
@@ -206,10 +221,15 @@ public class AnalyzerSecondary {
 
 	
 	//<ConstAttribution> ::= Identifier '=' <Value>
-	public static void analiseConstAttribution() {
+	public static void analiseConstAttribution(SymbolConstant constSymbol) {
 		Util.handleTerminal("IDENTIFICADOR", false, false);
 		Util.handleTerminal("=", true, false);
 		analiseValue();
+		
+		constSymbol.setValue(TokensFlow.back().getValue());
+		System.out.println("Constante do tipo " + constSymbol.getType() + " de valor " + constSymbol.getValue() + " e nome " + constSymbol.getName());
+		Analyzer.symbolTable.add(constSymbol);
+		
 		return;
 
 	}

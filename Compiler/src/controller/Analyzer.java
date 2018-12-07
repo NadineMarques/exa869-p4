@@ -18,7 +18,7 @@ import model.Util;
  */
 
 public class Analyzer {
-	public List<Symbol> symbolTable = new LinkedList<Symbol>();
+	public static List<Symbol> symbolTable = new LinkedList<Symbol>();
 
 	//<Global> ::= <Constant Declaration> <Class Declaration> <More Classes>
 	public static void analiseGlobal() {
