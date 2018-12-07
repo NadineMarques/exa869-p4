@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import model.First;
 import model.SymbolConstant;
+import model.SymbolVariable;
 import model.Token;
 import model.TokensFlow;
 import model.Util;
@@ -252,9 +253,14 @@ public class AnalyzerSecondary {
 	
 	//<Variable> ::= Type <Variable2>
 	public static void analiseVariable() {
+		String tipo;
+		SymbolVariable variableTemp = new SymbolVariable();
 		if(TokensFlow.hasNext() && Util.isType(TokensFlow.getToken())) {
+			tipo = TokensFlow.getToken().getValue();			
+			variableTemp.setType(tipo);
+			
 			TokensFlow.next();
-			analiseVariable2();
+			analiseVariable2(variableTemp);
 			return;
 		} else {
 			Util.addError(First.Variable.toString());
@@ -271,8 +277,8 @@ public class AnalyzerSecondary {
 	}
 	
 	//<Variable2> ::= <Name> <More Variables>
-	public static void analiseVariable2() {
-		analiseName();
+	public static void analiseVariable2(SymbolVariable variableTemp) {
+		analiseName(variableTemp);
 		if(TokensFlow.hasNext() && First.check("MoreVariables", TokensFlow.getToken())) {
 			analiseMoreVariables();
 			return;
@@ -287,7 +293,7 @@ public class AnalyzerSecondary {
 	}
 	
 	//<Name> ::= Identifier<Array Verification><More Names>
-	public static void analiseName() {
+	public static void analiseName(SymbolVariable variableTemp) {
 		if(!Util.handleTerminal("IDENTIFICADOR", false, false)) {
 			while(TokensFlow.hasNext()) {
 				if(First.check("MoreVariables", TokensFlow.getToken()) ||
@@ -299,22 +305,30 @@ public class AnalyzerSecondary {
 				TokensFlow.next();
 			}
 		}
-
+		
+		
+		variableTemp.addToken(TokensFlow.getToken());
+		variableTemp.setName(TokensFlow.back().getValue());
+		Analyzer.symbolTable.add(variableTemp);
+		
+		System.out.println( "Variavel " + ((SymbolVariable)Analyzer.symbolTable.get(3)).getName() + " adicionada à tabela ");
+		
+		
 		if(TokensFlow.hasNext() && First.check("ArrayVerification", TokensFlow.getToken())) {
 			analiseArrayVerification();
-			analiseMoreNames();
+			analiseMoreNames(variableTemp);
 			return;
 		} else {
-			analiseMoreNames();
+			analiseMoreNames(variableTemp);
 			return;
 		}
 	}
 	
 	//<More Names> ::= ',' <Name> | ';'
-	public static void analiseMoreNames() {
+	public static void analiseMoreNames(SymbolVariable variableTemp) {
 		if(TokensFlow.hasNext() && TokensFlow.getToken().getValue().equals(",")) {
 			TokensFlow.next();
-			analiseName();
+			analiseName(variableTemp);
 			return;
 			
 		} else if(TokensFlow.hasNext() && TokensFlow.getToken().getValue().equals(";")) {

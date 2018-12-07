@@ -16,4 +16,12 @@ public class Symbol {
 		this.token = token;
 	}
 	
+	public Symbol() {
+	}
+	
+	
+	public void addToken(Token token) {
+		this.token = token;
+	}
+	
 }
