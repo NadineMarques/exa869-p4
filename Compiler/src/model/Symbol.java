@@ -24,4 +24,8 @@ public class Symbol {
 		this.token = token;
 	}
 	
+	public Token getToken() {
+		return token;
+	}
+	
 }

@@ -1,6 +1,8 @@
 const {
 	float numero = 1.2, numero2 = 3.2; 
 	int numerooooo = 1;
+	string aaa = "abc";
+	bool verdade = true;
 }
 
 

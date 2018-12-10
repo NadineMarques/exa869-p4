@@ -12,30 +12,34 @@ package model;
  *
  */
 public class SymbolConstant extends Symbol{
-	private String type;
-	private String value; 
-	private String name;
+	private Token type;
+	private Token value; 
+	private Token name;
 	
 	public SymbolConstant(Token token) {
 		super(token);
-		name = token.getValue();
+		name = token;
+		
 	}
 	
-	public void setType(String type) {
+	public void setType(Token type) {
 		this.type = type;
 	}
-	public String getType() {
+	public Token getType() {
 		return type;
 	}
 
-	public String getName() {
+	public Token getName() {
 		return name;
 	}
+	public void setName(Token name) {
+		this.value = name;
+	}
 
-	public void setValue(String value) {
+	public void setValue(Token value) {
 		this.value = value;
 	}
-	public String getValue() {
+	public Token getValue() {
 		return value;
 	}
 

@@ -10,39 +10,38 @@ package model;
  *
  */
 public class SymbolVariable extends Symbol{
-	private String type; 
-	private String name;
-	private String value = "0";
+	private Token type; 
+	private Token name;
+	private Token value;
 	
 	public SymbolVariable(Token token) {
 		super(token);
-		name = token.getValue();
 	}
 	
 	public SymbolVariable() {
 
 	}
 	
-	public void setName(String name) {
+	public void setName(Token name) {
 		this.name = name;
 	}
 	
 	
-	public void setType(String type) {
+	public void setType(Token type) {
 		this.type = type;
 	}
-	public String getType() {
+	public Token getType() {
 		return type;
 	}
 
-	public String getName() {
+	public Token getName() {
 		return name;
 	}
 
-	public void setValue(String value) {
+	public void setValue(Token value) {
 		this.value = value;
 	}
-	public String getValue() {
+	public Token getValue() {
 		return value;
 	}
 	

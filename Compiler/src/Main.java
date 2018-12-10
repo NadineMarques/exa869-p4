@@ -6,6 +6,9 @@ import java.util.Map;
 
 import controller.Analyzer;
 import controller.FileController;
+import controller.SemanticAnalyzer;
+import model.Symbol;
+import model.SymbolConstant;
 import model.Token;
 import model.TokensFlow;
 import model.Util;
@@ -18,6 +21,7 @@ public class Main {
 		Iterator<String> iSource = sourceFiles.keySet().iterator();
 		
 		while(iSource.hasNext()) {
+			Analyzer.symbolTable = new LinkedList<Symbol>();
 			Util.errors = new LinkedList<String>();
 			String fileName = iSource.next();
 			String sourceCode = sourceFiles.get(fileName);
@@ -28,6 +32,9 @@ public class Main {
 			Analyzer.analiseGlobal();
 			FileController.saveSyntacticResults(fileName);
 		}
+		
+		
+		
 		
 		System.out.println("Análise Sintatica Concluída!");
 		

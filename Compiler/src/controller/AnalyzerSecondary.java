@@ -176,24 +176,24 @@ public class AnalyzerSecondary {
 		
 		//adicionar constantes à tabela de símbolos aqui
 		SymbolConstant constTemp = new SymbolConstant(TokensFlow.getToken());
-		String tipo = TokensFlow.back().getValue();
-		System.out.println("Adicionando constante do tipo " + tipo + " à tabela de símbolos" );
+		Token tipo = TokensFlow.back();
+		
 		constTemp.setType(tipo);
+
 		analiseConstAttribution(constTemp);
 		analiseMoreConstants(tipo);
 		return;
 	}
 	
 	//<More Constants> ::= ',' <ConstAttribution> <More Constants> | ';' <New Declaration> 
-	public static void analiseMoreConstants(String tipo) {
+	public static void analiseMoreConstants(Token tipo) {
 		if(TokensFlow.hasNext() && TokensFlow.getToken().getValue().equals(",")) {
 			TokensFlow.next();
 			
 			//adicionar constantes à tabela de símbolos aqui
 			SymbolConstant constTemp = new SymbolConstant(TokensFlow.getToken());
-			System.out.println("Adicionando constante do tipo " + tipo + " à tabela de símbolos" );
-			constTemp.setType(tipo);
 
+			constTemp.setType(tipo);
 			
 			
 			
@@ -227,8 +227,14 @@ public class AnalyzerSecondary {
 		Util.handleTerminal("=", true, false);
 		analiseValue();
 		
-		constSymbol.setValue(TokensFlow.back().getValue());
-		System.out.println("Constante do tipo " + constSymbol.getType() + " de valor " + constSymbol.getValue() + " e nome " + constSymbol.getName());
+		constSymbol.setValue(TokensFlow.back());
+		System.out.println("Constante do tipo " + 
+							constSymbol.getType().getValue() + 
+							" de valor " + constSymbol.getValue().getValue() + 
+							" e nome " + constSymbol.getName().getValue() +
+							" adicionada à tabela de símbolos"
+				);
+		SemanticAnalyzer.atribuitionChecker(constSymbol);
 		Analyzer.symbolTable.add(constSymbol);
 		
 		return;
@@ -253,10 +259,10 @@ public class AnalyzerSecondary {
 	
 	//<Variable> ::= Type <Variable2>
 	public static void analiseVariable() {
-		String tipo;
+		Token tipo;
 		SymbolVariable variableTemp = new SymbolVariable();
 		if(TokensFlow.hasNext() && Util.isType(TokensFlow.getToken())) {
-			tipo = TokensFlow.getToken().getValue();			
+			tipo = TokensFlow.getToken();			
 			variableTemp.setType(tipo);
 			
 			TokensFlow.next();
@@ -308,10 +314,10 @@ public class AnalyzerSecondary {
 		
 		
 		variableTemp.addToken(TokensFlow.getToken());
-		variableTemp.setName(TokensFlow.back().getValue());
+		variableTemp.setName(TokensFlow.back());
 		Analyzer.symbolTable.add(variableTemp);
 		
-		System.out.println( "Variavel " + ((SymbolVariable)Analyzer.symbolTable.get(3)).getName() + " adicionada à tabela ");
+		System.out.println( "Variável " + variableTemp.getName().getValue() + " do tipo " + variableTemp.getType().getValue() + " adicionada à tabela ");
 		
 		
 		if(TokensFlow.hasNext() && First.check("ArrayVerification", TokensFlow.getToken())) {
@@ -468,7 +474,7 @@ public class AnalyzerSecondary {
 	
 	//<Array Index> ::= <Add Exp>
 	public static void analiseArrayIndex() {
-		Util.arrayIndexVerifier(TokensFlow.getToken());
+		SemanticAnalyzer.arrayIndexVerifier(TokensFlow.getToken());
 		
 		analiseAddExp();
 		return;
