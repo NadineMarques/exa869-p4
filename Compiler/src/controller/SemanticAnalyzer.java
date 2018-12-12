@@ -108,4 +108,34 @@ public class SemanticAnalyzer {
 			}
 		}
 	}
+	
+	
+	public static void checkConstantOrVariable(Token token) {
+		boolean isDeclared = false;
+		
+		for(int i=0;i<Analyzer.symbolTable.size();i++) {
+			
+			
+			if((Analyzer.symbolTable.get(i).getToken().getValue().equals(token.getValue()))) {
+				System.out.println("Tentando atribuir valor a uma constante");
+				addSemanticError("Atribuição de valor em constante");
+				isDeclared = true;
+			}
+			
+			if((Analyzer.symbolTable.get(i)).getToken().getValue().equals(token.getValue())) {
+				
+				isDeclared = true;
+			}
+		
+		}
+		
+		if(!isDeclared) {
+			System.out.println("Tentando atribuir a uma variável não declarada");
+			addSemanticError("Atribuição em variável não declarada");
+		}
+	}
+	
+	
+	
+	
 }

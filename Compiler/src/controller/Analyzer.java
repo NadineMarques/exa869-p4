@@ -1512,7 +1512,14 @@ public class Analyzer {
 				return;
 			}
 			
-		} else if(TokensFlow.hasNext() && TokensFlow.getToken().getTokenClass().equals("IDENTIFICADOR")) { 
+		} else if(TokensFlow.hasNext() && TokensFlow.getToken().getTokenClass().equals("IDENTIFICADOR")) {
+			//checar constante
+			//verificar se variável está sendo usada sem ser declarada
+			Token tokenTemp;
+			tokenTemp = TokensFlow.getToken();
+			System.out.println("Estou aqui " + tokenTemp.getValue());
+			SemanticAnalyzer.checkConstantOrVariable(tokenTemp);
+			
 			TokensFlow.next();	
 			if(TokensFlow.hasNext() && First.check("ArrayVerification", TokensFlow.getToken())) {
 				AnalyzerSecondary.analiseArrayVerification();
