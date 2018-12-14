@@ -270,7 +270,6 @@ public class First {
 		add("float");
 		add("bool");
 		add("string");
-		add("void");
 	}};
 	
 	public static LinkedList<String> MoreNames = new LinkedList<String>() {{
@@ -365,7 +364,6 @@ public class First {
 		add("float");
 		add("bool");
 		add("string");
-		add("void");
 	}};
 	
 	public static LinkedList<String> ClassDeclaration  = new LinkedList<String>() {{
