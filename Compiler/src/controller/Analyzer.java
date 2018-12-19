@@ -20,6 +20,8 @@ import model.semantic.Symbol;
 
 public class Analyzer {
 	public static List<Symbol> symbolTable;
+	
+	public static Token type;
 
 	//<Global> ::= <Constant Declaration> <Class Declaration> <More Classes>
 	public static void analiseGlobal() {
@@ -194,6 +196,9 @@ public class Analyzer {
 	public static void analiseMethodDeclaration() {
 		if(Util.handleTerminal("method", true, false)) {
 			
+			type = TokensFlow.getToken();
+			System.out.println("Tipo do método " + type.getValue());
+			
 			AnalyzerSecondary.analiseType();
 			
 			if(!Util.handleTerminal("IDENTIFICADOR", false, false)) {
@@ -210,6 +215,7 @@ public class Analyzer {
 						First.check("Commands", TokensFlow.getToken()) ||
 						TokensFlow.getToken().getValue().equals("}") ||
 						First.check("MoreMethods", TokensFlow.getToken())) {
+
 						break;
 					}
 					
@@ -243,6 +249,9 @@ public class Analyzer {
 							First.check("Commands", TokensFlow.getToken()) ||
 							TokensFlow.getToken().getValue().equals("}") ||
 							First.check("MoreMethods", TokensFlow.getToken())) {
+							
+						
+
 							break;
 					}
 					
@@ -279,6 +288,7 @@ public class Analyzer {
 								First.check("Commands", TokensFlow.getToken()) ||
 								TokensFlow.getToken().getValue().equals("}") ||
 								First.check("MoreMethods", TokensFlow.getToken())) {
+		
 								break;
 						}
 						
@@ -310,6 +320,8 @@ public class Analyzer {
 								First.check("Commands", TokensFlow.getToken()) ||
 								TokensFlow.getToken().getValue().equals("}") ||
 								First.check("MoreMethods", TokensFlow.getToken())) {
+							
+					
 								break;
 						}
 						
@@ -340,7 +352,11 @@ public class Analyzer {
 					analiseVariableDeclaration();
 					
 					if(TokensFlow.hasNext() && First.check("Commands", TokensFlow.getToken())) {
+						
+			
+						
 						analiseCommands();
+						
 						
 						if(!Util.handleTerminal("}", true, false)) {
 							if(TokensFlow.isEmpty()) {
@@ -407,6 +423,8 @@ public class Analyzer {
 						}
 					}
 				} else if(TokensFlow.hasNext() && First.check("Commands", TokensFlow.getToken())) {
+
+					
 					analiseCommands();
 					if(!Util.handleTerminal("}", true, false)) {
 						if(TokensFlow.isEmpty()) {
@@ -483,6 +501,7 @@ public class Analyzer {
 								First.check("Commands", TokensFlow.getToken()) ||
 								TokensFlow.getToken().getValue().equals("}") ||
 								First.check("MoreMethods", TokensFlow.getToken())) {
+			
 								break;
 						}
 						
@@ -514,6 +533,7 @@ public class Analyzer {
 								First.check("Commands", TokensFlow.getToken()) ||
 								TokensFlow.getToken().getValue().equals("}") ||
 								First.check("MoreMethods", TokensFlow.getToken())) {
+					
 								break;
 						}
 						
@@ -542,6 +562,9 @@ public class Analyzer {
 				if(TokensFlow.hasNext() && First.check("VariableDeclaration", TokensFlow.getToken())) { 
 					analiseVariableDeclaration();
 					if(TokensFlow.hasNext() && First.check("Commands", TokensFlow.getToken())) {
+						
+			
+						
 						analiseCommands();
 
 						if(!Util.handleTerminal("}", true, false, new LinkedList<String>(First.Commands))) {
@@ -585,6 +608,7 @@ public class Analyzer {
 							while(TokensFlow.hasNext()) {
 								if(First.check("MoreMethods", TokensFlow.getToken()) ||
 										First.check("Commands", TokensFlow.getToken())) {
+									
 									break;
 								}
 								
@@ -605,6 +629,7 @@ public class Analyzer {
 						}
 						
 						if(TokensFlow.hasNext() && First.check("Commands", TokensFlow.getToken())) {
+		
 							analiseCommands();
 							if(!Util.handleTerminal("}", true, false, new LinkedList<String>(First.Commands))) {
 								if(TokensFlow.isEmpty()) {
@@ -647,6 +672,7 @@ public class Analyzer {
 					}
 					
 				} else if(TokensFlow.hasNext() && First.check("Commands", TokensFlow.getToken())) {
+					
 					analiseCommands();
 					if(!Util.handleTerminal("}", true, false, new LinkedList<String>(First.Commands))) {
 						if(TokensFlow.isEmpty()) {
@@ -688,6 +714,7 @@ public class Analyzer {
 						while(TokensFlow.hasNext()) {
 							if(First.check("MoreMethods", TokensFlow.getToken()) ||
 									First.check("Commands", TokensFlow.getToken())) {
+							
 								break;
 							}
 							
@@ -1019,6 +1046,9 @@ public class Analyzer {
 		
 
 		if(TokensFlow.hasNext() && First.check("Commands", TokensFlow.getToken())) {
+			
+			
+			
 			analiseCommands();
 			
 			if(!Util.handleTerminal("}", true, false, new LinkedList<String>(First.Commands))) {
@@ -1172,6 +1202,12 @@ public class Analyzer {
 				return;
 			}
 		} else if(TokensFlow.hasNext() && First.check("Return", TokensFlow.getToken())) {
+			if(!(type==null)) {
+				System.out.println("Analisando tipo do retorno");
+				SemanticAnalyzer.returnChecker(type, TokensFlow.forth());
+			}
+			
+			
 			AnalyzerSecondary.analiseReturn();
 			if(TokensFlow.hasNext() && TokensFlow.getToken().getValue().equals(";")) {
 				TokensFlow.next();

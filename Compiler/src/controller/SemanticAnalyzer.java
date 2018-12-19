@@ -166,6 +166,23 @@ public class SemanticAnalyzer {
 			
 		}
 	}
+
+	/**
+	 * 
+	 * Verifica retorno do método com tipo da declaração
+	 * 
+	 * @param type
+	 * @param forth
+	 */
+	public static void returnChecker(Token type, Token forth) {
+		System.out.println("Tipo declarado " + type.getValue());
+		System.out.println("Tipo retornado " + forth.getTokenClass());
+		if( !(type.getValue().equals(forth.getTokenClass())) ) {
+			System.out.println("Retorno incompatível com declaração");
+			addSemanticError("Retorno incompatível com declaração");
+		}
+		
+	}
 	
 	
 	
