@@ -1,13 +1,13 @@
 package controller;
 
+import java.beans.Expression;
 import java.util.LinkedList;
 
 import model.First;
-import model.SymbolConstant;
-import model.SymbolVariable;
 import model.Token;
 import model.TokensFlow;
 import model.Util;
+import model.semantic.*;
 
 /**
  * Classe que implementa os principais métodos secundários para realização da análise sintática.
@@ -475,7 +475,6 @@ public class AnalyzerSecondary {
 	//<Array Index> ::= <Add Exp>
 	public static void analiseArrayIndex() {
 		SemanticAnalyzer.arrayIndexVerifier(TokensFlow.getToken());
-		
 		analiseAddExp();
 		return;
 	}
@@ -704,6 +703,8 @@ public class AnalyzerSecondary {
 	//<Relational Exp> ::= RelationalOperator <Add Exp> <Logical Exp> | <Logical Exp>
 	public static void analiseRelationalExp() {
 		if(TokensFlow.hasNext() && TokensFlow.getToken().getTokenClass().equals("OPERADOR_RELACIONAL")) {
+			Expressions.addOperator();
+
 			TokensFlow.next();
 			analiseAddExp(); 
 			
@@ -727,10 +728,12 @@ public class AnalyzerSecondary {
 	//<Logical Exp> ::= '||' <Expression> | '&&' <Expression> | <> 
 	public static void analiseLogicalExp() {
 		if(TokensFlow.hasNext() && TokensFlow.getToken().getValue().equals("||")) { 
+			Expressions.addOperator();
 			TokensFlow.next();
 			Analyzer.analiseExpression();
 			return;
 		} else if(TokensFlow.hasNext() && TokensFlow.getToken().getValue().equals("&&")) { 
+			Expressions.addOperator();
 			TokensFlow.next();
 			Analyzer.analiseExpression();
 			return;
@@ -754,6 +757,7 @@ public class AnalyzerSecondary {
 	//<D> ::= '+' <Add Exp> | '-' <Add Exp> | <>
 	public static void analiseD() { 
 		if(TokensFlow.hasNext() && (TokensFlow.getToken().getValue().equals("+") || TokensFlow.getToken().getValue().equals("-"))) {
+			Expressions.addOperator();
 			TokensFlow.next();
 			analiseAddExp();
 			return;
@@ -776,10 +780,12 @@ public class AnalyzerSecondary {
 	//<E> ::= '*' <Mult Exp> | '/' <Mult Exp> | <>
 	public static void analiseE() { 
 		if(TokensFlow.hasNext() && TokensFlow.getToken().getValue().equals("*")) {
+			Expressions.addOperator();
 			TokensFlow.next();
 			analiseMultExp();
 			return;
 		} else if(TokensFlow.hasNext() && TokensFlow.getToken().getValue().equals("/")) {
+			Expressions.addOperator();
 			TokensFlow.next();
 			analiseMultExp();
 			return;
@@ -835,6 +841,7 @@ public class AnalyzerSecondary {
 	////<Exp Value> ::= Number |  '(' <Expression> ')' |  Identifier<Array Verification><Attr><Param2> | 'true' | 'false' 
 	public static void analiseExpValue() { 
 		if(TokensFlow.hasNext() && TokensFlow.getToken().getTokenClass().equals("NUMERO")) {
+			Expressions.addNumber();
 			TokensFlow.next();
 			return;
 		} else if(TokensFlow.hasNext() && TokensFlow.getToken().getValue().equals("(")) {
@@ -882,6 +889,7 @@ public class AnalyzerSecondary {
 			}
 			
 		} else if(TokensFlow.hasNext() && (TokensFlow.getToken().getValue().equals("true") || TokensFlow.getToken().getValue().equals("false"))) {
+			Expressions.addBolean();
 			TokensFlow.next();
 			return;
 			

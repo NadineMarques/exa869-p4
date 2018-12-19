@@ -1,7 +1,9 @@
 /**
  * 
  */
-package model;
+package model.semantic;
+
+import model.Token;
 
 /**
  * Classe que representa os símbolos das variáveis na tabela de símbolos

@@ -12,9 +12,9 @@ class Cliente extends Pessoa{
    	int a;
    }
    
-   method bool Saque(int conta[2], int senha, float dinheiro){
+   method bool Saque(int conta, int senha, float dinheiro){
    aaa = "aaa";
-        if(conta == 2 && senha == 1234) then{
+        if(1 + 1 + 2 + 2 == 2 && 3 * 3 + 2 + 1 == (((1234 + 5)))) then{
             saldo = saldo + dinheiro;
         } 
    }

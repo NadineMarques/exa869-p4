@@ -1,11 +1,13 @@
 /**
  * 
  */
-package model;
+package model.semantic;
+
+import model.Token;
 
 /**
  *
- *Classe que representa os símbolos das constantes na tabela de símbolos
+ * Classe que representa os símbolos das constantes na tabela de símbolos
  *
  * @author Nadine Cerqueira
  * @author Valmir Vinicius

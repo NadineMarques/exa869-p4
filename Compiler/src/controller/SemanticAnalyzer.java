@@ -3,13 +3,16 @@
  */
 package controller;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import model.SymbolConstant;
-import model.SymbolVariable;
 import model.Token;
 import model.TokensFlow;
+import model.semantic.Expressions;
+import model.semantic.SymbolClass;
+import model.semantic.SymbolConstant;
+import model.semantic.SymbolVariable;
 
 /**
  *
@@ -21,6 +24,9 @@ import model.TokensFlow;
  */
 public class SemanticAnalyzer {
 	public static List<String> semanticErrors = new LinkedList<String>();
+	public static List<SymbolConstant> constTable = new LinkedList<SymbolConstant>();
+	public static List<SymbolClass> table = new LinkedList<SymbolClass>();
+	
 	
 	public static void arrayIndexVerifier(Token token) {
 		if(token.getTokenClass().equals("NUMERO")) {
@@ -69,9 +75,6 @@ public class SemanticAnalyzer {
 			}
 		}
 	}
-	
-	
-	
 	
 	
 	public static void atribuitionChecker(SymbolVariable variavel) {
@@ -132,6 +135,35 @@ public class SemanticAnalyzer {
 		if(!isDeclared) {
 			System.out.println("Tentando atribuir a uma variável não declarada");
 			addSemanticError("Atribuição em variável não declarada");
+		}
+	}
+	
+	
+	public static void reduceExpression() {
+		Iterator<String> i = Expressions.list.iterator();
+		String actual;
+		String first = new String();
+
+		if(i.hasNext()) {
+			actual = i.next();
+			first = actual;
+		} //tratar caso q n tem
+
+		while(i.hasNext()) {
+			actual = i.next();
+			
+			if(first == "int" || first == "float") {
+				if(actual == first || actual == "OPERADOR_ARITMETICO") {
+					continue;
+				}
+			}
+			
+			if(actual == "OPERADOR_ARITMETICO") {
+				
+			}
+			
+			
+			
 		}
 	}
 	

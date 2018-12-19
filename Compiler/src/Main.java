@@ -7,11 +7,11 @@ import java.util.Map;
 import controller.Analyzer;
 import controller.FileController;
 import controller.SemanticAnalyzer;
-import model.Symbol;
-import model.SymbolConstant;
 import model.Token;
 import model.TokensFlow;
 import model.Util;
+import model.semantic.Symbol;
+import model.semantic.SymbolConstant;
 
 public class Main {
 

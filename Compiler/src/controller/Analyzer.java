@@ -4,10 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import model.First;
-import model.Symbol;
 import model.Token;
 import model.TokensFlow;
 import model.Util;
+import model.semantic.Expressions;
+import model.semantic.Symbol;
 
 /**
  * Classe que implementa os principais métodos para realização da análise sintática.
@@ -770,6 +771,8 @@ public class Analyzer {
 	public static void analiseExpression() { 
 		AnalyzerSecondary.analiseAddExp();
 		AnalyzerSecondary.analiseRelationalExp();
+		System.out.println(Expressions.list.toString());
+		Expressions.reset();
 	}
 
 	//<Write Statement> ::= 'write''('<Writing_1>')' ';'
