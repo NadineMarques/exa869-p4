@@ -10,7 +10,6 @@ import controller.SemanticAnalyzer;
 import model.Token;
 import model.TokensFlow;
 import model.Util;
-import model.semantic.Expression;
 import model.semantic.Expressions;
 import model.semantic.Symbol;
 import model.semantic.SymbolConstant;
@@ -31,8 +30,7 @@ public class Main {
 			Lexer lexer = new Lexer();
 			lexer.initialize(sourceCode);
 			TokensFlow.setTokensSet(lexer.getTokens());
-			Expression expression = new Expression();
-			Analyzer.analiseGlobal(expression);
+			Analyzer.analiseGlobal();
 			FileController.saveSyntacticResults(fileName);
 		}
 		

@@ -138,6 +138,55 @@ public class SemanticAnalyzer {
 		}
 	}
 	
+
+
+	
+	public static void reduceExpression() {
+		Iterator<String> i = Expressions.list.iterator();
+		String actual;
+		String first = new String();
+
+		if(i.hasNext()) {
+			actual = i.next();
+			first = actual;
+		} //tratar caso q n tem
+
+		while(i.hasNext()) {
+			actual = i.next();
+			
+			if(first == "int" || first == "float") {
+				if(actual == first || actual == "OPERADOR_ARITMETICO") {
+					continue;
+				}
+			}
+			
+			if(actual == "OPERADOR_ARITMETICO") {
+				
+			}
+			
+			
+			
+		}
+	}
+
+	/**
+	 * 
+	 * Verifica retorno do método com tipo da declaração
+	 * 
+	 * @param type
+	 * @param forth
+	 */
+	public static void returnChecker(Token type, Token forth) {
+		System.out.println("Tipo declarado " + type.getValue());
+		System.out.println("Tipo retornado " + forth.getTokenClass());
+		if( !(type.getValue().equals(forth.getTokenClass())) ) {
+			System.out.println("Retorno incompatível com declaração");
+			addSemanticError("Retorno incompatível com declaração");
+		}
+		
+	}
+	
+	
 	
 	
 }

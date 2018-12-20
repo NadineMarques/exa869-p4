@@ -61,6 +61,14 @@ public class TokensFlow {
 		return tokensSet.get(index-1);
 	}
 	
+	
+	/**
+	 * Retorna o próximo token
+	 */
+	public static Token forth() {
+		return tokensSet.get(index+1);
+	}
+	
 	/**
 	 * Verifica se não há mais tokens.
 	 * @return <code>true</code>, se não há mais tokens; <code>false</code>, caso contrário
