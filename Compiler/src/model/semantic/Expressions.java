@@ -14,7 +14,9 @@ import model.TokensFlow;
  *
  */
 public class Expressions {
+	
 	public static List<String> list = new LinkedList<String>();
+	
 	
 	public static void reset() {
 		 list.clear();

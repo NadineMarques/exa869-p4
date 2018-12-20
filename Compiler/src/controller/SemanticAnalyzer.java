@@ -138,34 +138,8 @@ public class SemanticAnalyzer {
 		}
 	}
 	
+
 	
-	public static void reduceExpression() {
-		Iterator<String> i = Expressions.list.iterator();
-		String actual;
-		String first = new String();
-
-		if(i.hasNext()) {
-			actual = i.next();
-			first = actual;
-		} //tratar caso q n tem
-
-		while(i.hasNext()) {
-			actual = i.next();
-			
-			if(first == "int" || first == "float") {
-				if(actual == first || actual == "OPERADOR_ARITMETICO") {
-					continue;
-				}
-			}
-			
-			if(actual == "OPERADOR_ARITMETICO") {
-				
-			}
-			
-			
-			
-		}
-	}
 	
 	
 	
