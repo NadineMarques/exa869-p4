@@ -199,7 +199,11 @@ public class Analyzer {
 			type = TokensFlow.getToken();
 			System.out.println("Tipo do método " + type.getValue());
 			
+			SemanticAnalyzer.table.getLast().newMethod();
+			
 			AnalyzerSecondary.analiseType();
+			
+			SemanticAnalyzer.table.getLast().getMethods().getLast().setName();
 			
 			if(!Util.handleTerminal("IDENTIFICADOR", false, false)) {
 				if(TokensFlow.isEmpty()) {
@@ -798,8 +802,6 @@ public class Analyzer {
 	public static void analiseExpression() { 
 		AnalyzerSecondary.analiseAddExp();
 		AnalyzerSecondary.analiseRelationalExp();
-		System.out.println(Expressions.list.toString());
-		Expressions.reset();
 	}
 
 	//<Write Statement> ::= 'write''('<Writing_1>')' ';'
@@ -1209,6 +1211,7 @@ public class Analyzer {
 			
 			
 			AnalyzerSecondary.analiseReturn();
+			
 			if(TokensFlow.hasNext() && TokensFlow.getToken().getValue().equals(";")) {
 				TokensFlow.next();
 				return;

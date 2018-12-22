@@ -5,23 +5,32 @@ const {
 	bool verdade = true;
 }
 
+class Pessoa {
+   variables {
+   	int k;
+   }
+
+   method int b(int c) {
+	}
+}
 
 
 class Cliente extends Pessoa{
    variables {
-   	int a;
+   	int a[2];
    }
    
    method bool Saque(int conta, int senha, float dinheiro){
-
-   aaa = "aaa";
-        if((3>4) + ((((2+1))))) then {
-          
+	   variables {
+	   	int k[2];
+	   }
+        if(true && ((1.0 + (2.0 + 3.0))) + 2.0 + 3.0 + 2.0 == 4.0 && true || 2 > 3 && true) then {
+         write(x);
         } 
-        return aaa; 
 
-
+	return a;
    }
-    
-
 }
+
+
+		

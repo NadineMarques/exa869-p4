@@ -24,9 +24,19 @@ public class Expressions {
 	
 	public static void addNumber() {
 		if(TokensFlow.getToken().getValue().contains(".")) {
-			list.add("float");
+			if(TokensFlow.getToken().getValue().contains("-")) {
+				list.add("OPERADOR_ARITMETICO");
+				list.add("float");
+			} else {
+				list.add("float");
+			}
 		} else {
-			list.add("int");
+			if(TokensFlow.getToken().getValue().contains("-")) {
+				list.add("OPERADOR_ARITMETICO");
+				list.add("int");
+			} else {
+				list.add("int");
+			}
 		}
 	}
 	
@@ -41,6 +51,10 @@ public class Expressions {
 	
 	public static void addOperator() {
 		list.add(TokensFlow.getToken().getTokenClass());
+	}
+	
+	public static void addParenthesis() {
+		list.add(TokensFlow.getToken().getValue());
 	}
 
 }

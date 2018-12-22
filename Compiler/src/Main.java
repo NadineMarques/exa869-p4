@@ -29,11 +29,46 @@ public class Main {
 			
 			Lexer lexer = new Lexer();
 			lexer.initialize(sourceCode);
-			TokensFlow.setTokensSet(lexer.getTokens());
+			
+			List<Token> tokens = lexer.getTokens();
+			List<Token> tokensUpdated = new LinkedList<Token>();
+			tokensUpdated.addAll(tokens);
+			
+			Iterator<Token> i = tokens.iterator();
+			Token token;
+			int index = 0;
+			
+			while(i.hasNext()) {
+				token = i.next();
+				
+				if(token.getTokenClass().equals("NUMERO") && token.getValue().contains("-")) {
+					String number = token.getValue().replace("-", "").trim();
+					tokensUpdated.remove(index);
+					tokensUpdated.add(index, new Token("OPERADOR_ARITMETICO", "-", token.getRow()));
+					tokensUpdated.add(index+1, new Token("NUMERO", number, token.getRow()));
+				} 
+				
+				index++;
+			}
+			
+			
+			System.out.println(tokensUpdated);
+			
+			TokensFlow.setTokensSet(tokensUpdated);
+			
 			Analyzer.analiseGlobal();
+			//System.out.println(Expressions.list.toString());
+			Expressions.list.add(0, "(");
+			Expressions.list.add(")");
+			System.out.println(Expressions.list);
+			System.out.println(SemanticAnalyzer.reduceExpression(0));
+			SemanticAnalyzer.firstPassing();
+			System.out.println("\n\n\n\n\n\n\n\n\n");
+			System.out.println(SemanticAnalyzer.table);
+			System.out.println(SemanticAnalyzer.table.toString());
+
 			FileController.saveSyntacticResults(fileName);
 		}
-		
 		
 		
 		

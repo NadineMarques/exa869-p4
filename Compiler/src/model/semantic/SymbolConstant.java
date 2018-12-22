@@ -44,5 +44,9 @@ public class SymbolConstant extends Symbol{
 	public Token getValue() {
 		return value;
 	}
+	
+	public String toString() {
+		return type.toString() + name.toString() + value.toString();
+	}
 
 }

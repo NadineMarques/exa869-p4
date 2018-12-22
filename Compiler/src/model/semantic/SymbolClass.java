@@ -3,10 +3,13 @@
  */
 package model.semantic;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import controller.SemanticAnalyzer;
 import model.Token;
+import model.TokensFlow;
 
 /**
 *
@@ -17,15 +20,22 @@ import model.Token;
 *
 */
 public class SymbolClass {
-	private String name;
-	private String heritage;
-	private LinkedList<Token> attributes = new LinkedList<Token>();
+	private Token name;
+	private Token heritage;
+	private LinkedList<SymbolVariable> attributes = new LinkedList<SymbolVariable>();
 	private LinkedList<SymbolMethod> methods = new LinkedList<SymbolMethod>();
 	
 	/**
 	 * @return the attributes
 	 */
-	public LinkedList<Token> getAttributes() {
+	public SymbolVariable getAttribute() {
+		return attributes.getLast();
+	}
+	
+	/**
+	 * @return the attributes
+	 */
+	public LinkedList<SymbolVariable>  getAttributes() {
 		return attributes;
 	}
 
@@ -39,30 +49,49 @@ public class SymbolClass {
 	/**
 	 * @return the name
 	 */
-	public String getName() {
+	public Token getName() {
 		return name;
 	}
 
 	/**
 	 * @param name the name to set
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setName() {
+		this.name = TokensFlow.getToken();
 	}
 
 	/**
 	 * @return the heritage
 	 */
-	public String getHeritage() {
+	public Token getHeritage() {
 		return heritage;
 	}
 
 	/**
 	 * @param heritage the heritage to set
 	 */
-	public void setHeritage(String heritage) {
-		this.heritage = heritage;
+	public void setHeritage() {
+		this.heritage = TokensFlow.getToken();
 	}
+	
+	public void newAttribute() {
+		attributes.add(new SymbolVariable());
+		attributes.getLast().setType();
+	}
+	
+	public void newMethod() {
+		methods.add(new SymbolMethod());
+		methods.getLast().setType();
+	}
+	
+	public String toString() {
+		return "class " + name.getValue() + " extends "  +
+				"\nAtributos:\n" +
+				attributes.toString() + 
+				"\nMetodos:\n" +
+				methods.toString();
+	}
+
 
 
 }

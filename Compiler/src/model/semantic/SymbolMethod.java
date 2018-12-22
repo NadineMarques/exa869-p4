@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import model.Token;
+import model.TokensFlow;
 
 /**
  *
@@ -17,32 +18,49 @@ import model.Token;
  *
  */
 public class SymbolMethod extends Symbol{
-	private String type;
-	private String name;
+	private Token type;
+	private Token name;
+	private Token returnToken;
 	private LinkedList<SymbolVariable> parameters = new LinkedList<SymbolVariable>();
 	private LinkedList<SymbolVariable> variables = new LinkedList<SymbolVariable>();
 	/**
 	 * @return the type
 	 */
-	public String getType() {
+	public Token getType() {
 		return type;
 	}
 	/**
 	 * @param type the type to set
 	 */
-	public void setType(String type) {
+	public void setType(Token type) {
 		this.type = type;
 	}
+	
+
+	public void setType() {
+		this.type = TokensFlow.getToken();
+	}
+	
+	public void setReturn() {
+		this.returnToken = TokensFlow.getToken();
+	}
+	
 	/**
 	 * @return the name
 	 */
-	public String getName() {
+	public Token getName() {
 		return name;
 	}
+	
+
+	public void setName() {
+		this.name = TokensFlow.getToken();
+	}
+	
 	/**
 	 * @param name the name to set
 	 */
-	public void setName(String name) {
+	public void setName(Token name) {
 		this.name = name;
 	}
 	/**
@@ -57,6 +75,7 @@ public class SymbolMethod extends Symbol{
 	public void setParameters(LinkedList<SymbolVariable> parameters) {
 		this.parameters = parameters;
 	}
+	
 	/**
 	 * @return the variables
 	 */
@@ -68,6 +87,20 @@ public class SymbolMethod extends Symbol{
 	 */
 	public void setVariables(LinkedList<SymbolVariable> variables) {
 		this.variables = variables;
+	}
+	
+	public void newParameter() {
+		parameters.add(new SymbolVariable());
+		parameters.getLast().setType();
+	}
+	
+	public void newVariable() {
+		variables.add(new SymbolVariable());
+		variables.getLast().setType();
+	}
+	
+	public String toString() {
+		return type.getValue() + " " + name.getValue() + "\nParâmetros:\n" + parameters.toString() + "\nVariaveis:" + variables.toString(); 
 	}
 	
 }

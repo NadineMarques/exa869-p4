@@ -12,6 +12,7 @@ import model.TokensFlow;
 import model.semantic.Expressions;
 import model.semantic.SymbolClass;
 import model.semantic.SymbolConstant;
+import model.semantic.SymbolMethod;
 import model.semantic.SymbolVariable;
 
 /**
@@ -23,9 +24,10 @@ import model.semantic.SymbolVariable;
  *
  */
 public class SemanticAnalyzer {
-	public static List<String> semanticErrors = new LinkedList<String>();
-	public static List<SymbolConstant> constTable = new LinkedList<SymbolConstant>();
-	public static List<SymbolClass> table = new LinkedList<SymbolClass>();
+	public static LinkedList<String> semanticErrors = new LinkedList<String>();
+	public static LinkedList<SymbolConstant> constTable = new LinkedList<SymbolConstant>();
+	public static LinkedList<SymbolClass> table = new LinkedList<SymbolClass>();
+	public static boolean processingAttributes = false;
 	
 	
 	public static void arrayIndexVerifier(Token token) {
@@ -138,35 +140,188 @@ public class SemanticAnalyzer {
 		}
 	}
 	
-
-
 	
-	public static void reduceExpression() {
-		Iterator<String> i = Expressions.list.iterator();
+	public static List<String> reduceExpression(int index) {
+		Iterator<String> i = Expressions.list.subList(index, Expressions.list.size()).iterator();
+		List<String> expression = new LinkedList<String>();
+		List<String> temp;
 		String actual;
-		String first = new String();
+		int open = 0, close = 0;
 
-		if(i.hasNext()) {
+		while(i.hasNext()) {
 			actual = i.next();
-			first = actual;
-		} //tratar caso q n tem
+
+			if(actual.equals("(")) {
+				open = 0;
+				close = 0;
+				expression.addAll(reduceExpression(index+1));
+				
+				while(i.hasNext()) {
+					actual = i.next();
+					
+					if(actual.equals("(")) {
+						open++;
+					} else if(actual.equals(")")) {
+						close++;
+					}
+					
+					index++;
+					
+					if(close > open) {
+						break;
+					}
+				}
+
+			} else if(actual.equals(")")) {
+				return reduceMinimalArithmetic(expression);
+			} else {
+				expression.add(actual);
+			}
+			
+			index++;
+		}
+		
+		
+		return expression;
+	}
+	
+	public static List<String> reduceMinimalArithmetic(List<String> expression) {
+		if(expression.size() <= 1) {
+			return expression;
+		}
+		
+		System.out.println(expression + "kkkkk");
+				
+		Iterator<String> i = expression.iterator();
+		LinkedList<String> result = new LinkedList<String>();
+		String first = i.next(), actual;
+		
+		if(!(first.equals("int") || first.equals("float"))) {
+			result.add(first);
+		}
 
 		while(i.hasNext()) {
 			actual = i.next();
 			
-			if(first == "int" || first == "float") {
-				if(actual == first || actual == "OPERADOR_ARITMETICO") {
-					continue;
+			if(first.equals("int") || first.equals("float")) {
+				if(actual.equals("OPERADOR_ARITMETICO")) {
+					actual = i.next();
+					if(!actual.equals(first)) {
+						System.out.println("TIpos incompativeis ari");
+					}
+					
+					if(!i.hasNext()) {
+						result.add(actual);						
+					}
+					first = actual; //????
+				} else if(actual.equals("OPERADOR_RELACIONAL") || actual.equals("OPERADOR_LOGICO")) {
+					result.add(first);
+					result.add(actual);
+					actual = i.next();
+					if(!i.hasNext() || actual.equals("boolean")) {
+						result.add(actual);
+					}
+					
+					first = actual; //?????
+				}
+			} else {
+				if(!(actual.equals("int") || actual.equals("float"))) {
+					result.add(actual);		
+				}
+				first = actual;
+			}
+		}
+		
+		return reduceMinimalRelational(result);
+	}
+	
+	public static List<String> reduceMinimalRelational(List<String> expression) {
+		if(expression.size() == 1) {
+			return expression;
+		}
+		System.out.println(expression + "dddd");
+		Iterator<String> i = expression.iterator();
+		LinkedList<String> result = new LinkedList<String>();
+		String first = i.next(), actual = first;
+		boolean flag = false;
+		
+		if(!(first.equals("int") || first.equals("float"))) {
+			result.add(first);
+		}
+		
+		while(i.hasNext()) {
+			actual = i.next();
+			
+			if(first.equals("int") || first.equals("float")) {
+				if(actual.equals("OPERADOR_RELACIONAL")) {
+					actual = i.next();
+
+					System.out.println("oi " + first + "  " + actual);
+					if(!actual.equals(first)) {
+						System.out.println("TIpos incompativeis rela");
+					}
+
+					if(!i.hasNext()) {
+						result.add("boolean");						
+					} 
+					
+					first = actual;
+					flag = true;
+				} else if(actual.equals("OPERADOR_LOGICO")) {
+					if(flag) {
+						result.add("boolean");
+					} else {
+						result.add(first);
+					}
+					
+					result.add(actual);
+					actual = i.next();
+					if(!i.hasNext() || actual.equals("boolean")) {
+						result.add(actual);
+					} 
+					
+					first = actual;
+					flag = false;
+				}
+			} else {
+				if(!(actual.equals("int") || actual.equals("float"))) {
+					result.add(actual);		
+				}
+				first = actual;
+			}
+		}
+		System.out.println(result.toString() + "cccc");
+
+		return reduceMinimalLogical(result);
+	}
+	
+	public static List<String> reduceMinimalLogical(List<String> expression) {
+		if(expression.size() == 1) {
+			return expression;
+		}
+				
+		Iterator<String> i = expression.iterator();
+		LinkedList<String> result = new LinkedList<String>();
+		String first = i.next(), actual = first;
+		
+		while(i.hasNext()) {
+			actual = i.next();
+			
+			if(first.equals("boolean")) {
+				if(actual.equals("OPERADOR_LOGICO")) {
+					actual = i.next();
+					if(!actual.equals(first)) {
+						System.out.println("TIpos incompativeis logic");
+					}
+					
+					if(!i.hasNext()) {
+						result.add(actual);						
+					}
 				}
 			}
-			
-			if(actual == "OPERADOR_ARITMETICO") {
-				
-			}
-			
-			
-			
 		}
+		
+		return result;
 	}
 
 	/**
@@ -186,7 +341,107 @@ public class SemanticAnalyzer {
 		
 	}
 	
+	public static void firstPassing() {
+		Iterator<SymbolClass> i = SemanticAnalyzer.table.iterator();
+		SymbolClass symbolClass;
+		int contClass = 0;
+		
+		while(i.hasNext()) {
+			symbolClass = i.next();
+			
+			if(symbolClass.getHeritage() != null) {
+				if(contClass == 0) {
+					System.out.println("Classe utilizada em herança não foi declarada. Linha: " + symbolClass.getHeritage().getRow());
+					addSemanticError("Classe utilizada em herança não foi declarada. Linha: " + symbolClass.getHeritage().getRow());
+				} else {
+					List<SymbolClass> subListClasses = table.subList(0, contClass);
+					Iterator<SymbolClass> i2 = subListClasses.iterator();
+					SymbolClass fatherSymbol;
+					boolean found = false;
+					
+					while(i2.hasNext()) {
+						fatherSymbol = i2.next();
+						
+						if(symbolClass.getHeritage().getValue().equals(fatherSymbol.getName().getValue())) {
+							found = true;
+							symbolClass.getAttributes().addAll(variablesHeritage(fatherSymbol.getAttributes(), symbolClass.getAttributes()));
+							symbolClass.getMethods().addAll(methodsHeritage(fatherSymbol.getMethods(), symbolClass.getMethods()));
+						}
+					}
+					
+					if(!found) {
+						addSemanticError("Classe utilizada em herança não foi declarada. Linha: " + symbolClass.getHeritage().getRow());
+					}
+					
+				}
+			}
+			
+			contClass++;
+			
+		}
+	}
 	
+	private static List<SymbolVariable> variablesHeritage(List<SymbolVariable> father, List<SymbolVariable> son) {
+		Iterator<SymbolVariable> i = son.iterator();
+		List<SymbolVariable> result = new LinkedList<SymbolVariable>();
+		List<String> fatherNames = getVariableNames(father);
+		SymbolVariable symbol;
+		
+		while(i.hasNext()) {
+			symbol = i.next();
+			
+			if(fatherNames.contains(symbol.getName().getValue())) {
+				addSemanticError("Atributo já foi definido na classe pai. Linha: " + symbol.getName().getRow());
+			} else {
+				result.add(symbol);
+			}
+		}
+		
+		return result;
+	}
+	
+	private static List<String> getVariableNames(List<SymbolVariable> list) {
+		Iterator<SymbolVariable> i = list.iterator();
+		List<String> result = new LinkedList<String>();
+		
+		while(i.hasNext()) {
+			result.add(i.next().getName().getValue());
+		}
+		
+		return result;
+	}
+	
+	private static List<SymbolMethod> methodsHeritage(List<SymbolMethod> father, List<SymbolMethod> son) {
+		Iterator<SymbolMethod> iS;
+		Iterator<SymbolMethod> iF = father.iterator();
+		List<SymbolMethod> result = new LinkedList<SymbolMethod>();
+		SymbolMethod symbolF, symbolS;
+		
+		while(iF.hasNext()) {
+			symbolF = iF.next();
+			
+			iS = son.iterator();
+			
+			while(iS.hasNext()) {
+				symbolS = iS.next();
+				
+				if(symbolF.getName().getValue().equals(symbolS.getName().getValue())) {
+					if(symbolF.getType().getValue().equals(symbolS.getType().getValue())) {
+						if(symbolF.getParameters().equals(symbolS.getParameters())) {
+							addSemanticError("Método já definido na classe pai. Linha: " + symbolS.getName().getRow());
+							continue;
+						}
+					}
+				}
+				
+				result.add(symbolF);
+			}
+		}
+		
+		return result;
+	}
+	
+
 	
 	
 }

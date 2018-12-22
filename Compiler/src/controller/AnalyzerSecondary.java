@@ -32,6 +32,8 @@ public class AnalyzerSecondary {
 	
 	//<Class Identification> ::= Identifier <Class Heritage> '{' <Class Body> '}'
 	public static void analiseClassIdentification() {
+		SemanticAnalyzer.table.add(new SymbolClass());
+		SemanticAnalyzer.table.getLast().setName();
 		if(!Util.handleTerminal("IDENTIFICADOR", false, false)) {
 			if(TokensFlow.isEmpty()) {
 				return;
@@ -127,6 +129,7 @@ public class AnalyzerSecondary {
 	//<Class Heritage> ::= 'extends' Identifier | <>
 	public static void analiseClassHeritage() {
 		Util.handleTerminal("extends", true, false);
+		SemanticAnalyzer.table.getLast().setHeritage();
 		Util.handleTerminal("IDENTIFICADOR", false, false);
 		return;
 	}
@@ -144,10 +147,13 @@ public class AnalyzerSecondary {
 	
 	//<Class Attributes> ::= <Variable Declaration> 
 	public static void analiseClassAttributes() {
+		SemanticAnalyzer.processingAttributes = true;
 		if(TokensFlow.hasNext() && First.check("VariableDeclaration", TokensFlow.getToken())) {
 			Analyzer.analiseVariableDeclaration();
+			SemanticAnalyzer.processingAttributes = false;
 			return;
 		} else {
+			SemanticAnalyzer.processingAttributes = false;
 			return;
 		}
 	}
@@ -261,7 +267,15 @@ public class AnalyzerSecondary {
 	public static void analiseVariable() {
 		Token tipo;
 		SymbolVariable variableTemp = new SymbolVariable();
+		
 		if(TokensFlow.hasNext() && Util.isType(TokensFlow.getToken())) {
+			
+			if(SemanticAnalyzer.processingAttributes) {
+				SemanticAnalyzer.table.getLast().newAttribute();
+			} else {
+				SemanticAnalyzer.table.getLast().getMethods().getLast().newVariable();
+			}
+
 			tipo = TokensFlow.getToken();			
 			variableTemp.setType(tipo);
 			
@@ -300,6 +314,12 @@ public class AnalyzerSecondary {
 	
 	//<Name> ::= Identifier<Array Verification><More Names>
 	public static void analiseName(SymbolVariable variableTemp) {
+		if(SemanticAnalyzer.processingAttributes) {
+			SemanticAnalyzer.table.getLast().getAttribute().setName();
+		} else {
+			SemanticAnalyzer.table.getLast().getMethods().getLast().getVariables().getLast().setName();
+		}
+		
 		if(!Util.handleTerminal("IDENTIFICADOR", false, false)) {
 			while(TokensFlow.hasNext()) {
 				if(First.check("MoreVariables", TokensFlow.getToken()) ||
@@ -311,7 +331,6 @@ public class AnalyzerSecondary {
 				TokensFlow.next();
 			}
 		}
-		
 		
 		variableTemp.addToken(TokensFlow.getToken());
 		variableTemp.setName(TokensFlow.back());
@@ -372,7 +391,12 @@ public class AnalyzerSecondary {
 	//<Parameter Declaration2> ::= <Type> Identifier <Array Verification> <More Parameters>
 	public static void analiseParameterDeclaration2() {
 		if(TokensFlow.hasNext()) {
+			
+			SemanticAnalyzer.table.getLast().getMethods().getLast().newParameter();
+			
 			analiseType();
+			
+			SemanticAnalyzer.table.getLast().getMethods().getLast().getParameters().getLast().setName();
 			
 			if(!Util.handleTerminal("IDENTIFICADOR", false, false)) {
 				if(TokensFlow.isEmpty()) {
@@ -488,6 +512,7 @@ public class AnalyzerSecondary {
 	
 	//<Return1> ::= Identifier <Array Verification> | <Value>
 	public static void analiseReturn1() {
+		SemanticAnalyzer.table.getLast().getMethods().getLast().setReturn();
 		if(TokensFlow.hasNext() && TokensFlow.getToken().getTokenClass().equals("IDENTIFICADOR")) {
 			TokensFlow.next();			
 			if(TokensFlow.hasNext() && First.check("ArrayVerification", TokensFlow.getToken())) {
@@ -845,9 +870,11 @@ public class AnalyzerSecondary {
 			TokensFlow.next();
 			return;
 		} else if(TokensFlow.hasNext() && TokensFlow.getToken().getValue().equals("(")) {
+			Expressions.addParenthesis();
 			TokensFlow.next();
 			if(TokensFlow.hasNext() && First.check("Expression", TokensFlow.getToken())){
 				Analyzer.analiseExpression();
+				Expressions.addParenthesis();
 				Util.handleTerminal(")", true, false);
 				return;
 			}
