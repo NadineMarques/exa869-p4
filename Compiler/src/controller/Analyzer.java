@@ -61,6 +61,7 @@ public class Analyzer {
 					TokensFlow.next();
 				}
 				
+				SemanticAnalyzer.passingClass();
 				return;
 			}
 		} else {
@@ -772,7 +773,6 @@ public class Analyzer {
 						}
 					}
 					
-					
 					if(TokensFlow.hasNext() && First.check("MoreMethods", TokensFlow.getToken())) {
 						AnalyzerSecondary.analiseMoreMethods();
 						return;
@@ -782,7 +782,6 @@ public class Analyzer {
 				}
 			}
 		} else {
-
 			while(TokensFlow.hasNext()) {
 				if(First.check("MoreMethods", TokensFlow.getToken())) {
 					break;
@@ -793,9 +792,6 @@ public class Analyzer {
 			
 			return;
 		}
-		
-
-
 	}
 	
 	//<Expression> ::= <Add Exp><Relational Exp>
@@ -939,8 +935,12 @@ public class Analyzer {
 			}
 		}
 		
+		Expressions.reset();
+		int row = TokensFlow.getToken().getRow();
 		
 		analiseExpression();
+		
+		SemanticAnalyzer.conditionVerifier(row, "if");
 		
 		if(!Util.handleTerminal(")", true, false)) {
 			if(TokensFlow.isEmpty()) {
@@ -1048,8 +1048,6 @@ public class Analyzer {
 		
 
 		if(TokensFlow.hasNext() && First.check("Commands", TokensFlow.getToken())) {
-			
-			
 			
 			analiseCommands();
 			
@@ -1267,7 +1265,13 @@ public class Analyzer {
 			}
 		}
 		
+		Expressions.reset();
+		int row = TokensFlow.getToken().getRow();
+		
 		analiseExpression();
+		
+		SemanticAnalyzer.conditionVerifier(row, "while");	
+
 		
 		if(!Util.handleTerminal(")", true, false)) {
 			if(TokensFlow.isEmpty()) {

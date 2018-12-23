@@ -51,22 +51,8 @@ public class Main {
 				index++;
 			}
 			
-			
-			System.out.println(tokensUpdated);
-			
 			TokensFlow.setTokensSet(tokensUpdated);
-			
 			Analyzer.analiseGlobal();
-			//System.out.println(Expressions.list.toString());
-			Expressions.list.add(0, "(");
-			Expressions.list.add(")");
-			System.out.println(Expressions.list);
-			System.out.println(SemanticAnalyzer.reduceExpression(0));
-			SemanticAnalyzer.firstPassing();
-			System.out.println("\n\n\n\n\n\n\n\n\n");
-			System.out.println(SemanticAnalyzer.table);
-			System.out.println(SemanticAnalyzer.table.toString());
-
 			FileController.saveSyntacticResults(fileName);
 		}
 		

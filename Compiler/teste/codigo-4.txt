@@ -7,18 +7,24 @@ const {
 
 class Pessoa {
    variables {
-   	int k;
+   	int k[(1 + 2)];
    }
 
-   method int b(int c) {
-	}
+   method int b(int c) { write(x);}
 }
 
 
 class Cliente extends Pessoa{
    variables {
-   	int a[2];
+   	int a;
    }
+
+   method bool Saque(int conta, int senha, float dinheiro){
+	   variables {
+	   	int k[2];
+	   }
+   }
+
    
    method bool Saque(int conta, int senha, float dinheiro){
 	   variables {
@@ -30,6 +36,7 @@ class Cliente extends Pessoa{
 
 	return a;
    }
+
 }
 
 

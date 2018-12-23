@@ -2,6 +2,7 @@ package controller;
 
 import java.beans.Expression;
 import java.util.LinkedList;
+import java.util.List;
 
 import model.First;
 import model.Token;
@@ -161,6 +162,7 @@ public class AnalyzerSecondary {
 	//<Class Methods> ::= <Method Declaration> | <>
 	public static void analiseClassMethods() {
 		Analyzer.analiseMethodDeclaration();
+		SemanticAnalyzer.methodVerifier();
 		return;
 	}
 		
@@ -378,7 +380,9 @@ public class AnalyzerSecondary {
 	
 	//<More Methods> ::= <Method Declaration> | <>      
 	public static void analiseMoreMethods() {
+		SemanticAnalyzer.methodVerifier();
 		Analyzer.analiseMethodDeclaration();
+		SemanticAnalyzer.methodVerifier();
 		return;
 	}
 	
@@ -498,8 +502,12 @@ public class AnalyzerSecondary {
 	
 	//<Array Index> ::= <Add Exp>
 	public static void analiseArrayIndex() {
-		SemanticAnalyzer.arrayIndexVerifier(TokensFlow.getToken());
-		analiseAddExp();
+		Expressions.reset();
+		int row = TokensFlow.getToken().getRow();
+		
+		Analyzer.analiseExpression();
+		
+		SemanticAnalyzer.arrayIndexVerifier(row);
 		return;
 	}
 	
@@ -718,7 +726,25 @@ public class AnalyzerSecondary {
 			TokensFlow.next();
 			return;
 		} else if(TokensFlow.hasNext() && First.check("Expression", TokensFlow.getToken())){
+			Expressions.reset();
+			int row = TokensFlow.getToken().getRow();
+			
 			Analyzer.analiseExpression();
+			
+			List<String> reduced = Expressions.reduce(row);
+			
+			
+			if(reduced.size()  == 1) {
+				if(!reduced.get(0).equals("ERROR")) {
+					if(!reduced.get(0).equals("boolean")) {
+						SemanticAnalyzer.addSemanticError("Expressão com resultado inesperado na condição do comando if. Esperado: boolean. Obtido: " + reduced.get(0) + " Linha:" + row);
+					}
+				}
+			} else {
+				SemanticAnalyzer.addSemanticError("Expressão com resultado inesperado na condição do comando if. Linha: " + row);
+			}
+			
+			
 			return;
 		} else {
 			Util.addError(First.NormalAttribution3.toString());
@@ -753,12 +779,12 @@ public class AnalyzerSecondary {
 	//<Logical Exp> ::= '||' <Expression> | '&&' <Expression> | <> 
 	public static void analiseLogicalExp() {
 		if(TokensFlow.hasNext() && TokensFlow.getToken().getValue().equals("||")) { 
-			Expressions.addOperator();
+				Expressions.addOperator();
 			TokensFlow.next();
 			Analyzer.analiseExpression();
 			return;
 		} else if(TokensFlow.hasNext() && TokensFlow.getToken().getValue().equals("&&")) { 
-			Expressions.addOperator();
+				Expressions.addOperator();
 			TokensFlow.next();
 			Analyzer.analiseExpression();
 			return;
@@ -782,7 +808,7 @@ public class AnalyzerSecondary {
 	//<D> ::= '+' <Add Exp> | '-' <Add Exp> | <>
 	public static void analiseD() { 
 		if(TokensFlow.hasNext() && (TokensFlow.getToken().getValue().equals("+") || TokensFlow.getToken().getValue().equals("-"))) {
-			Expressions.addOperator();
+				Expressions.addOperator();
 			TokensFlow.next();
 			analiseAddExp();
 			return;
@@ -805,12 +831,12 @@ public class AnalyzerSecondary {
 	//<E> ::= '*' <Mult Exp> | '/' <Mult Exp> | <>
 	public static void analiseE() { 
 		if(TokensFlow.hasNext() && TokensFlow.getToken().getValue().equals("*")) {
-			Expressions.addOperator();
+				Expressions.addOperator();
 			TokensFlow.next();
 			analiseMultExp();
 			return;
 		} else if(TokensFlow.hasNext() && TokensFlow.getToken().getValue().equals("/")) {
-			Expressions.addOperator();
+				Expressions.addOperator();
 			TokensFlow.next();
 			analiseMultExp();
 			return;
@@ -866,15 +892,17 @@ public class AnalyzerSecondary {
 	////<Exp Value> ::= Number |  '(' <Expression> ')' |  Identifier<Array Verification><Attr><Param2> | 'true' | 'false' 
 	public static void analiseExpValue() { 
 		if(TokensFlow.hasNext() && TokensFlow.getToken().getTokenClass().equals("NUMERO")) {
-			Expressions.addNumber();
+				Expressions.addNumber();
+			
 			TokensFlow.next();
 			return;
 		} else if(TokensFlow.hasNext() && TokensFlow.getToken().getValue().equals("(")) {
-			Expressions.addParenthesis();
+			
+				Expressions.addParenthesis();
 			TokensFlow.next();
 			if(TokensFlow.hasNext() && First.check("Expression", TokensFlow.getToken())){
 				Analyzer.analiseExpression();
-				Expressions.addParenthesis();
+					Expressions.addParenthesis();
 				Util.handleTerminal(")", true, false);
 				return;
 			}
@@ -916,7 +944,7 @@ public class AnalyzerSecondary {
 			}
 			
 		} else if(TokensFlow.hasNext() && (TokensFlow.getToken().getValue().equals("true") || TokensFlow.getToken().getValue().equals("false"))) {
-			Expressions.addBolean();
+				Expressions.addBolean();
 			TokensFlow.next();
 			return;
 			

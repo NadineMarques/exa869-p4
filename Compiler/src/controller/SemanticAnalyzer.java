@@ -30,13 +30,59 @@ public class SemanticAnalyzer {
 	public static boolean processingAttributes = false;
 	
 	
-	public static void arrayIndexVerifier(Token token) {
-		if(token.getTokenClass().equals("NUMERO")) {
-			if(token.getValue().contains("-")) {
-				addSemanticError("número negativo em índice de array");				
-				System.out.println("número negativo em índice de array");
+	public static void arrayIndexVerifier(int row) {
+		List<String> reduced = Expressions.reduce(row);
+
+		if(reduced.size()  == 1) {
+			if(!reduced.get(0).equals("ERROR")) {
+				if(!(reduced.get(0).equals("int"))) {
+					SemanticAnalyzer.addSemanticError("Expressão com resultado inesperado em índice de array. Esperado: int. Obtido: " + reduced.get(0) + ". Linha:" + row);
+				}
+			}
+		} else {
+			SemanticAnalyzer.addSemanticError("Expressão com resultado inesperado em índice de array. Linha:" + row);
+		}
+	}
+	
+	public static void conditionVerifier(int row, String command) {
+		List<String> reduced = Expressions.reduce(row);
+
+		if(reduced.size()  == 1) {
+			if(!reduced.get(0).equals("ERROR")) {
+				if(!(reduced.get(0).equals("boolean"))) {
+					SemanticAnalyzer.addSemanticError("Expressão com resultado inesperado em condição de comando " + command +". Esperado: boolean. Obtido: " + reduced.get(0) + ". Linha:" + row);
+				}
+			}
+		} else {
+			SemanticAnalyzer.addSemanticError("Expressão com resultado inesperado em condição de comando" + command + ". Linha:" + row);
+		}
+	}
+	
+	public static void methodVerifier() {
+		SymbolMethod method = SemanticAnalyzer.table.getLast().getMethods().removeLast();
+		Iterator<SymbolMethod> i = SemanticAnalyzer.table.getLast().getMethods().iterator();
+		SymbolMethod temp;
+		boolean conflict = false;
+		
+		while(i.hasNext()) {
+			temp = i.next();
+			
+			if(method.getName().getValue().equals(temp.getName().getValue())) {
+				if(method.getType().getValue().equals(temp.getType().getValue())) {
+					if(method.getParameters().equals(temp.getParameters())) {
+						conflict = true;
+						System.out.println("O método " + method.getName().getValue() + " já foi declarado anteriormente. Linha: " + method.getName().getRow());
+						SemanticAnalyzer.addSemanticError("O método " + method.getName().getValue() + " já foi declarado anteriormente. Linha: " + method.getName().getRow());
+					}
+					
+				}
 			}
 		}
+		
+		if(!conflict) {
+			SemanticAnalyzer.table.getLast().getMethods().add(method);
+		}
+		
 	}
 	
 	public static void addSemanticError(String erro) {
@@ -141,10 +187,9 @@ public class SemanticAnalyzer {
 	}
 	
 	
-	public static List<String> reduceExpression(int index) {
+	public static List<String> reduceExpression(int index, int row) {
 		Iterator<String> i = Expressions.list.subList(index, Expressions.list.size()).iterator();
 		List<String> expression = new LinkedList<String>();
-		List<String> temp;
 		String actual;
 		int open = 0, close = 0;
 
@@ -154,7 +199,7 @@ public class SemanticAnalyzer {
 			if(actual.equals("(")) {
 				open = 0;
 				close = 0;
-				expression.addAll(reduceExpression(index+1));
+				expression.addAll(reduceExpression(index+1, row));
 				
 				while(i.hasNext()) {
 					actual = i.next();
@@ -173,7 +218,7 @@ public class SemanticAnalyzer {
 				}
 
 			} else if(actual.equals(")")) {
-				return reduceMinimalArithmetic(expression);
+				return reduceMinimalArithmetic(expression, row);
 			} else {
 				expression.add(actual);
 			}
@@ -185,12 +230,10 @@ public class SemanticAnalyzer {
 		return expression;
 	}
 	
-	public static List<String> reduceMinimalArithmetic(List<String> expression) {
+	public static List<String> reduceMinimalArithmetic(List<String> expression, int row) {
 		if(expression.size() <= 1) {
 			return expression;
 		}
-		
-		System.out.println(expression + "kkkkk");
 				
 		Iterator<String> i = expression.iterator();
 		LinkedList<String> result = new LinkedList<String>();
@@ -207,7 +250,10 @@ public class SemanticAnalyzer {
 				if(actual.equals("OPERADOR_ARITMETICO")) {
 					actual = i.next();
 					if(!actual.equals(first)) {
-						System.out.println("TIpos incompativeis ari");
+						SemanticAnalyzer.addSemanticError("Tipos incompatíveis em Operação Aritmética. Linha: " + row);
+						List<String> list = new LinkedList<String>();
+						list.add("ERROR");
+						return list;
 					}
 					
 					if(!i.hasNext()) {
@@ -232,14 +278,14 @@ public class SemanticAnalyzer {
 			}
 		}
 		
-		return reduceMinimalRelational(result);
+		return reduceMinimalRelational(result, row);
 	}
 	
-	public static List<String> reduceMinimalRelational(List<String> expression) {
+	public static List<String> reduceMinimalRelational(List<String> expression, int row) {
 		if(expression.size() == 1) {
 			return expression;
 		}
-		System.out.println(expression + "dddd");
+		
 		Iterator<String> i = expression.iterator();
 		LinkedList<String> result = new LinkedList<String>();
 		String first = i.next(), actual = first;
@@ -255,10 +301,11 @@ public class SemanticAnalyzer {
 			if(first.equals("int") || first.equals("float")) {
 				if(actual.equals("OPERADOR_RELACIONAL")) {
 					actual = i.next();
-
-					System.out.println("oi " + first + "  " + actual);
 					if(!actual.equals(first)) {
-						System.out.println("TIpos incompativeis rela");
+						SemanticAnalyzer.addSemanticError("Tipos incompatíveis em Operação Relacional. Linha: " + row);
+						List<String> list = new LinkedList<String>();
+						list.add("ERROR");
+						return list;
 					}
 
 					if(!i.hasNext()) {
@@ -290,12 +337,11 @@ public class SemanticAnalyzer {
 				first = actual;
 			}
 		}
-		System.out.println(result.toString() + "cccc");
 
-		return reduceMinimalLogical(result);
+		return reduceMinimalLogical(result, row);
 	}
 	
-	public static List<String> reduceMinimalLogical(List<String> expression) {
+	public static List<String> reduceMinimalLogical(List<String> expression, int row) {
 		if(expression.size() == 1) {
 			return expression;
 		}
@@ -311,7 +357,10 @@ public class SemanticAnalyzer {
 				if(actual.equals("OPERADOR_LOGICO")) {
 					actual = i.next();
 					if(!actual.equals(first)) {
-						System.out.println("TIpos incompativeis logic");
+						SemanticAnalyzer.addSemanticError("Tipos incompatíveis em Operação Lógica. Linha: " + row);
+						List<String> list = new LinkedList<String>();
+						list.add("ERROR");
+						return list;
 					}
 					
 					if(!i.hasNext()) {
@@ -341,45 +390,35 @@ public class SemanticAnalyzer {
 		
 	}
 	
-	public static void firstPassing() {
-		Iterator<SymbolClass> i = SemanticAnalyzer.table.iterator();
-		SymbolClass symbolClass;
-		int contClass = 0;
+	public static void passingClass() {
+		SymbolClass symbolClass = SemanticAnalyzer.table.getLast();
 		
-		while(i.hasNext()) {
-			symbolClass = i.next();
-			
-			if(symbolClass.getHeritage() != null) {
-				if(contClass == 0) {
-					System.out.println("Classe utilizada em herança não foi declarada. Linha: " + symbolClass.getHeritage().getRow());
+		if(symbolClass.getHeritage() != null) {
+			if(SemanticAnalyzer.table.size() == 1) {
+				addSemanticError("Classe utilizada em herança não foi declarada. Linha: " + symbolClass.getHeritage().getRow());
+			} else {
+				Iterator<SymbolClass> i = SemanticAnalyzer.table.iterator();
+				SymbolClass fatherSymbol;
+				boolean found = false;
+				
+				while(i.hasNext()) {
+					fatherSymbol = i.next();
+					
+					if(symbolClass.getHeritage().getValue().equals(fatherSymbol.getName().getValue())) {
+						found = true;
+						symbolClass.getAttributes().addAll(variablesHeritage(fatherSymbol.getAttributes(), symbolClass.getAttributes()));
+						symbolClass.getMethods().addAll(methodsHeritage(fatherSymbol.getMethods(), symbolClass.getMethods()));
+					}
+				}
+				
+				if(!found) {
 					addSemanticError("Classe utilizada em herança não foi declarada. Linha: " + symbolClass.getHeritage().getRow());
-				} else {
-					List<SymbolClass> subListClasses = table.subList(0, contClass);
-					Iterator<SymbolClass> i2 = subListClasses.iterator();
-					SymbolClass fatherSymbol;
-					boolean found = false;
-					
-					while(i2.hasNext()) {
-						fatherSymbol = i2.next();
-						
-						if(symbolClass.getHeritage().getValue().equals(fatherSymbol.getName().getValue())) {
-							found = true;
-							symbolClass.getAttributes().addAll(variablesHeritage(fatherSymbol.getAttributes(), symbolClass.getAttributes()));
-							symbolClass.getMethods().addAll(methodsHeritage(fatherSymbol.getMethods(), symbolClass.getMethods()));
-						}
-					}
-					
-					if(!found) {
-						addSemanticError("Classe utilizada em herança não foi declarada. Linha: " + symbolClass.getHeritage().getRow());
-					}
-					
 				}
 			}
-			
-			contClass++;
-			
 		}
+
 	}
+	
 	
 	private static List<SymbolVariable> variablesHeritage(List<SymbolVariable> father, List<SymbolVariable> son) {
 		Iterator<SymbolVariable> i = son.iterator();

@@ -5,6 +5,8 @@ package model.semantic;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import controller.SemanticAnalyzer;
 import model.TokensFlow;
 
 /**
@@ -19,7 +21,13 @@ public class Expressions {
 	
 	
 	public static void reset() {
-		 list.clear();
+		list.clear();
+		Expressions.list.add(0, "(");
+	}
+	
+	public static List<String> reduce(int row) {
+		Expressions.list.add(")");
+		return SemanticAnalyzer.reduceExpression(0, row);
 	}
 	
 	public static void addNumber() {
