@@ -380,13 +380,62 @@ public class SemanticAnalyzer {
 	 * @param type
 	 * @param forth
 	 */
-	public static void returnChecker(Token type, Token forth) {
+	public static void methodReturnChecker(Token type, Token forth, String className) {
+		
 		System.out.println("Tipo declarado " + type.getValue());
-		System.out.println("Tipo retornado " + forth.getTokenClass());
-		if( !(type.getValue().equals(forth.getTokenClass())) ) {
-			System.out.println("Retorno incompatível com declaração");
-			addSemanticError("Retorno incompatível com declaração");
+		System.out.println("Valor retornado " + forth.getValue());
+		
+		if(forth.getTokenClass().equals("NUMERO")) {	
+			if(forth.getValue().contains(".")) {
+				if(type.getValue().equals("float")) {
+					return;
+				} else {
+					System.out.println("Retorno incompatível com declaração");
+					addSemanticError("Retorno incompatível com declaração");
+					return;
+				}
+			} else {
+				if(type.getValue().equals("int")) {
+					return;
+				} else {
+					System.out.println("Retorno incompatível com declaração");
+					addSemanticError("Retorno incompatível com declaração");
+					return;
+				}
+			}
 		}
+		
+		if(forth.getTokenClass().equals("CADEIA_DE_CARACTERES")) {	
+			if(type.getValue().equals("string")) {
+					return;
+			
+			} else {
+					System.out.println("Retorno incompatível com declaração");
+					addSemanticError("Retorno incompatível com declaração");
+					return;
+			}
+			
+		}
+
+		if(forth.getValue().equals("true") || forth.getValue().equals("false")) {	
+			if(type.getValue().equals("bool")) {
+				return;
+			
+			} else {
+				System.out.println("Retorno incompatível com declaração");
+				addSemanticError("Retorno incompatível com declaração");
+				return;
+			}
+			
+		}
+		
+		
+		if(forth.getTokenClass().equals("IDENTIFICADOR")) {
+			//verificar os tipos na tabela
+			System.out.println("CLASSNAME " + className);
+			return;
+		}
+		
 		
 	}
 	
@@ -478,6 +527,24 @@ public class SemanticAnalyzer {
 		}
 		
 		return result;
+	}
+
+	/**
+	 * 
+	 * Erro se não há retorno no método
+	 * 
+	 * @param type
+	 */
+	public static void returnRequiredChecker(Token type) {
+		System.out.println("Tipo no return required checker " + type.getValue());
+		System.out.println("IsThereReturn " + Analyzer.thereIsReturn);
+		if(!(type.getValue().equals("void")) && (!(Analyzer.thereIsReturn)) ) {
+			System.out.println("Retorno esperado do tipo " + type.getValue());
+			addSemanticError("Retorno esperado do tipo " + type.getValue());
+			return;
+		}
+		
+		Analyzer.thereIsReturn = false;
 	}
 	
 

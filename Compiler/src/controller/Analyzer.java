@@ -23,6 +23,8 @@ public class Analyzer {
 	
 	public static Token type;
 
+	public static boolean thereIsReturn;
+	
 	//<Global> ::= <Constant Declaration> <Class Declaration> <More Classes>
 	public static void analiseGlobal() {
 		if(TokensFlow.hasNext() && First.check("ConstantDeclaration", TokensFlow.getToken())) {
@@ -362,6 +364,11 @@ public class Analyzer {
 						
 						analiseCommands();
 						
+						if(Analyzer.type!=null) {
+							SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+						}
+						Analyzer.type = null;
+						
 						
 						if(!Util.handleTerminal("}", true, false)) {
 							if(TokensFlow.isEmpty()) {
@@ -431,6 +438,12 @@ public class Analyzer {
 
 					
 					analiseCommands();
+					
+					if(Analyzer.type!=null) {
+						SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+					}
+					Analyzer.type = null;
+					
 					if(!Util.handleTerminal("}", true, false)) {
 						if(TokensFlow.isEmpty()) {
 							return;
@@ -571,6 +584,11 @@ public class Analyzer {
 			
 						
 						analiseCommands();
+						
+						if(Analyzer.type!=null) {
+							SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+						}
+						Analyzer.type = null;
 
 						if(!Util.handleTerminal("}", true, false, new LinkedList<String>(First.Commands))) {
 							if(TokensFlow.isEmpty()) {
@@ -636,6 +654,12 @@ public class Analyzer {
 						if(TokensFlow.hasNext() && First.check("Commands", TokensFlow.getToken())) {
 		
 							analiseCommands();
+							
+							if(Analyzer.type!=null) {
+								SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+							}
+							Analyzer.type = null;
+							
 							if(!Util.handleTerminal("}", true, false, new LinkedList<String>(First.Commands))) {
 								if(TokensFlow.isEmpty()) {
 									return;
@@ -679,6 +703,12 @@ public class Analyzer {
 				} else if(TokensFlow.hasNext() && First.check("Commands", TokensFlow.getToken())) {
 					
 					analiseCommands();
+					
+					if(Analyzer.type!=null) {
+						SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+					}
+					Analyzer.type = null;
+					
 					if(!Util.handleTerminal("}", true, false, new LinkedList<String>(First.Commands))) {
 						if(TokensFlow.isEmpty()) {
 							return;
@@ -741,6 +771,12 @@ public class Analyzer {
 					
 					if(TokensFlow.hasNext() && First.check("Commands", TokensFlow.getToken())) {
 						analiseCommands();
+						
+						if(Analyzer.type!=null) {
+							SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+						}
+						Analyzer.type = null;
+						
 						if(!Util.handleTerminal("}", true, false, new LinkedList<String>(First.Commands))) {
 							if(TokensFlow.isEmpty()) {
 								return;
@@ -791,7 +827,8 @@ public class Analyzer {
 			}
 			
 			return;
-		}
+		}		
+		
 	}
 	
 	//<Expression> ::= <Add Exp><Relational Exp>
@@ -1201,20 +1238,23 @@ public class Analyzer {
 			} else {
 				return;
 			}
+		
 		} else if(TokensFlow.hasNext() && First.check("Return", TokensFlow.getToken())) {
+			thereIsReturn = true;
 			if(!(type==null)) {
-				System.out.println("Analisando tipo do retorno");
-				SemanticAnalyzer.returnChecker(type, TokensFlow.forth());
+				System.out.println("Analisando tipo do retorno " + type.getValue());
+				if(!(AnalyzerSecondary.className.isEmpty() || AnalyzerSecondary.className.equals(null))) {
+					
+					SemanticAnalyzer.methodReturnChecker(type, TokensFlow.forth(), AnalyzerSecondary.className);
+				}
 			}
 			
-			
 			AnalyzerSecondary.analiseReturn();
-			
 			if(TokensFlow.hasNext() && TokensFlow.getToken().getValue().equals(";")) {
 				TokensFlow.next();
 				return;
 			}
-		} 
+		}
 		
 		Util.addError(First.Commands.toString());
 		

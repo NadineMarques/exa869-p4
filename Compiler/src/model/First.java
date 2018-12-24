@@ -143,7 +143,6 @@ public class First {
 		add("float");
 		add("bool");
 		add("string");
-		add("void");
 	}};
 	
 	public static LinkedList<String> MoreConstants = new LinkedList<String>() {{
@@ -153,7 +152,6 @@ public class First {
 		add("float");
 		add("bool");
 		add("string");
-		add("void");
 	}};
 	
 	public static LinkedList<String> VariableDeclaration = new LinkedList<String>() {{

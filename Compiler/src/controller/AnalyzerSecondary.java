@@ -18,7 +18,7 @@ import model.semantic.*;
  *
  */
 public class AnalyzerSecondary {
-	
+	public static String className;
 	//<More Classes> ::= <Class Declaration><More Classes> | <>
 	public static void analiseMoreClasses() {
 		Analyzer.analiseClassDeclaration();
@@ -35,6 +35,8 @@ public class AnalyzerSecondary {
 	public static void analiseClassIdentification() {
 		SemanticAnalyzer.table.add(new SymbolClass());
 		SemanticAnalyzer.table.getLast().setName();
+		System.out.println("ClassName " + TokensFlow.getToken().getValue());
+		className = TokensFlow.getToken().getValue();
 		if(!Util.handleTerminal("IDENTIFICADOR", false, false)) {
 			if(TokensFlow.isEmpty()) {
 				return;
@@ -163,6 +165,10 @@ public class AnalyzerSecondary {
 	public static void analiseClassMethods() {
 		Analyzer.analiseMethodDeclaration();
 		SemanticAnalyzer.methodVerifier();
+		if(Analyzer.type!=null) {
+			SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+		}
+		Analyzer.type = null;
 		return;
 	}
 		
@@ -383,6 +389,10 @@ public class AnalyzerSecondary {
 		SemanticAnalyzer.methodVerifier();
 		Analyzer.analiseMethodDeclaration();
 		SemanticAnalyzer.methodVerifier();
+		if(Analyzer.type!=null) {
+			SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+		}
+		Analyzer.type = null;
 		return;
 	}
 	

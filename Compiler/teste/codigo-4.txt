@@ -26,7 +26,7 @@ class Cliente extends Pessoa{
    }
 
    
-   method bool Saque(int conta, int senha, float dinheiro){
+   method int Saque(int conta, int senha, float dinheiro){
 	   variables {
 	   	int k[2];
 	   }
