@@ -24,6 +24,7 @@ class Cliente extends Pessoa{
 	   	int k[2];
 	   }
 
+
    }
 
    

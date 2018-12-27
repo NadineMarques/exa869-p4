@@ -747,11 +747,11 @@ public class AnalyzerSecondary {
 			if(reduced.size()  == 1) {
 				if(!reduced.get(0).equals("ERROR")) {
 					if(!reduced.get(0).equals("boolean")) {
-						SemanticAnalyzer.addSemanticError("Expressão com resultado inesperado na condição do comando if. Esperado: boolean. Obtido: " + reduced.get(0) + " Linha:" + row);
+						SemanticAnalyzer.addSemanticError("Expressão com resultado inesperado na condição do comando if. Esperado: boolean. Obtido: " + reduced.get(0) + " ", row);
 					}
 				}
 			} else {
-				SemanticAnalyzer.addSemanticError("Expressão com resultado inesperado na condição do comando if. Linha: " + row);
+				SemanticAnalyzer.addSemanticError("Expressão com resultado inesperado na condição do comando if.", row);
 			}
 			
 			

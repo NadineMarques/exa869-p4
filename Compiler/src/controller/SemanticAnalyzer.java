@@ -36,11 +36,11 @@ public class SemanticAnalyzer {
 		if(reduced.size()  == 1) {
 			if(!reduced.get(0).equals("ERROR")) {
 				if(!(reduced.get(0).equals("int"))) {
-					SemanticAnalyzer.addSemanticError("Expressão com resultado inesperado em índice de array. Esperado: int. Obtido: " + reduced.get(0) + ". Linha:" + row);
+					SemanticAnalyzer.addSemanticError("Expressão com resultado inesperado em índice de array. Esperado: int. Obtido: " + reduced.get(0), row);
 				}
 			}
 		} else {
-			SemanticAnalyzer.addSemanticError("Expressão com resultado inesperado em índice de array. Linha:" + row);
+			SemanticAnalyzer.addSemanticError("Expressão com resultado inesperado em índice de array.", row);
 		}
 	}
 	
@@ -50,11 +50,11 @@ public class SemanticAnalyzer {
 		if(reduced.size()  == 1) {
 			if(!reduced.get(0).equals("ERROR")) {
 				if(!(reduced.get(0).equals("boolean"))) {
-					SemanticAnalyzer.addSemanticError("Expressão com resultado inesperado em condição de comando " + command +". Esperado: boolean. Obtido: " + reduced.get(0) + ". Linha:" + row);
+					SemanticAnalyzer.addSemanticError("Expressão com resultado inesperado em condição de comando " + command +". Esperado: boolean. Obtido: " + reduced.get(0), row);
 				}
 			}
 		} else {
-			SemanticAnalyzer.addSemanticError("Expressão com resultado inesperado em condição de comando" + command + ". Linha:" + row);
+			SemanticAnalyzer.addSemanticError("Expressão com resultado inesperado em condição de comando" + command + ".", row);
 		}
 	}
 	
@@ -71,8 +71,8 @@ public class SemanticAnalyzer {
 				if(method.getType().getValue().equals(temp.getType().getValue())) {
 					if(method.getParameters().equals(temp.getParameters())) {
 						conflict = true;
-						System.out.println("O método " + method.getName().getValue() + " já foi declarado anteriormente. Linha: " + method.getName().getRow());
-						SemanticAnalyzer.addSemanticError("O método " + method.getName().getValue() + " já foi declarado anteriormente. Linha: " + method.getName().getRow());
+						System.out.println("O método " + method.getName().getValue() + " já foi declarado anteriormente." + method.getName().getRow());
+						SemanticAnalyzer.addSemanticError("O método " + method.getName().getValue() + " já foi declarado anteriormente.", method.getName().getRow());
 					}
 					
 				}
@@ -85,9 +85,9 @@ public class SemanticAnalyzer {
 		
 	}
 	
-	public static void addSemanticError(String erro) {
-		semanticErrors.add("Erro semântico " + erro + " na linha " + TokensFlow.getToken().getRow());
-		System.out.println("Erro semântico " + erro + " na linha " + TokensFlow.getToken().getRow());
+	public static void addSemanticError(String erro, int linha) {
+		semanticErrors.add("Erro semântico " + erro + " na linha " + linha);
+		System.out.println("Erro semântico " + erro + " na linha " + linha);
 	}
 	
 	public static void atribuitionChecker(SymbolConstant constante) {
@@ -95,7 +95,7 @@ public class SemanticAnalyzer {
 			if(constante.getValue().getTokenClass().equals("NUMERO") && (!constante.getValue().getValue().contains(".")) ) {
 				return;
 			} else {
-				addSemanticError("Incompatibilidade de Tipos");				
+				addSemanticError("Incompatibilidade de Tipos", constante.getToken().getRow());				
 				System.out.println("Incompatibilidade de Tipos");
 			}
 			
@@ -103,7 +103,7 @@ public class SemanticAnalyzer {
 			if(constante.getValue().getTokenClass().equals("NUMERO")) {
 				return;
 			} else {
-				addSemanticError("Incompatibilidade de Tipos");				
+				addSemanticError("Incompatibilidade de Tipos", constante.getToken().getRow());				
 				System.out.println("Incompatibilidade de Tipos");
 			}
 			
@@ -111,7 +111,7 @@ public class SemanticAnalyzer {
 			if(constante.getValue().getValue().equals("true") || constante.getValue().getValue().equals("false")) {
 				return;
 			} else {
-				addSemanticError("Incompatibilidade de Tipos");				
+				addSemanticError("Incompatibilidade de Tipos", constante.getToken().getRow());				
 				System.out.println("Incompatibilidade de Tipos");
 			}
 			
@@ -119,7 +119,7 @@ public class SemanticAnalyzer {
 			if(constante.getValue().getTokenClass().equals("CADEIA_DE_CARACTERES")) {
 				return;
 			} else {
-				addSemanticError("Incompatibilidade de Tipos");				
+				addSemanticError("Incompatibilidade de Tipos", constante.getToken().getRow());				
 				System.out.println("Incompatibilidade de Tipos");
 			}
 		}
@@ -131,7 +131,7 @@ public class SemanticAnalyzer {
 			if(variavel.getValue().getTokenClass().equals("NUMERO") && (!variavel.getValue().getValue().contains(".")) ) {
 				return;
 			} else {
-				addSemanticError("Incompatibilidade de Tipos");				
+				addSemanticError("Incompatibilidade de Tipos", TokensFlow.getToken().getRow());				
 				System.out.println("Incompatibilidade de Tipos");
 			}
 			
@@ -139,7 +139,7 @@ public class SemanticAnalyzer {
 			if(variavel.getValue().getTokenClass().equals("NUMERO")) {
 				return;
 			} else {
-				addSemanticError("Incompatibilidade de Tipos");				
+				addSemanticError("Incompatibilidade de Tipos", TokensFlow.getToken().getRow());				
 				System.out.println("Incompatibilidade de Tipos");
 			}
 			
@@ -147,7 +147,7 @@ public class SemanticAnalyzer {
 			if(variavel.getValue().getValue().equals("true") || variavel.getValue().getValue().equals("true")) {
 				return;
 			} else {
-				addSemanticError("Incompatibilidade de Tipos");				
+				addSemanticError("Incompatibilidade de Tipos", TokensFlow.getToken().getRow());				
 				System.out.println("Incompatibilidade de Tipos");
 			}
 			
@@ -155,7 +155,7 @@ public class SemanticAnalyzer {
 			if(variavel.getValue().getTokenClass().equals("CADEIA_DE_CARACTERES")) {
 				return;
 			} else {
-				addSemanticError("Incompatibilidade de Tipos");				
+				addSemanticError("Incompatibilidade de Tipos", TokensFlow.getToken().getRow());				
 				System.out.println("Incompatibilidade de Tipos");
 			}
 		}
@@ -170,12 +170,11 @@ public class SemanticAnalyzer {
 			
 			if((Analyzer.symbolTable.get(i).getToken().getValue().equals(token.getValue()))) {
 				System.out.println("Tentando atribuir valor a uma constante");
-				addSemanticError("Atribuição de valor em constante");
+				addSemanticError("Atribuição de valor em constante", TokensFlow.getToken().getRow());
 				isDeclared = true;
 			}
 			
-			if((Analyzer.symbolTable.get(i)).getToken().getValue().equals(token.getValue())) {
-				
+			if((Analyzer.symbolTable.get(i)).getToken().getValue().equals(token.getValue())) {				
 				isDeclared = true;
 			}
 		
@@ -183,7 +182,7 @@ public class SemanticAnalyzer {
 		
 		if(!isDeclared) {
 			System.out.println("Tentando atribuir a uma variável não declarada");
-			addSemanticError("Atribuição em variável não declarada");
+			addSemanticError("Atribuição em variável não declarada", TokensFlow.getToken().getRow());
 		}
 	}
 	
@@ -251,7 +250,7 @@ public class SemanticAnalyzer {
 				if(actual.equals("OPERADOR_ARITMETICO")) {
 					actual = i.next();
 					if(!actual.equals(first)) {
-						SemanticAnalyzer.addSemanticError("Tipos incompatíveis em Operação Aritmética. Linha: " + row);
+						SemanticAnalyzer.addSemanticError("Tipos incompatíveis em Operação Aritmética.", row);
 						List<String> list = new LinkedList<String>();
 						list.add("ERROR");
 						return list;
@@ -303,7 +302,7 @@ public class SemanticAnalyzer {
 				if(actual.equals("OPERADOR_RELACIONAL")) {
 					actual = i.next();
 					if(!actual.equals(first)) {
-						SemanticAnalyzer.addSemanticError("Tipos incompatíveis em Operação Relacional. Linha: " + row);
+						SemanticAnalyzer.addSemanticError("Tipos incompatíveis em Operação Relacional.", row);
 						List<String> list = new LinkedList<String>();
 						list.add("ERROR");
 						return list;
@@ -358,7 +357,7 @@ public class SemanticAnalyzer {
 				if(actual.equals("OPERADOR_LOGICO")) {
 					actual = i.next();
 					if(!actual.equals(first)) {
-						SemanticAnalyzer.addSemanticError("Tipos incompatíveis em Operação Lógica. Linha: " + row);
+						SemanticAnalyzer.addSemanticError("Tipos incompatíveis em Operação Lógica.", row);
 						List<String> list = new LinkedList<String>();
 						list.add("ERROR");
 						return list;
@@ -392,7 +391,7 @@ public class SemanticAnalyzer {
 					return;
 				} else {
 					System.out.println("Retorno incompatível com declaração");
-					addSemanticError("Retorno incompatível com declaração");
+					addSemanticError("Retorno incompatível com declaração", forth.getRow());
 					return;
 				}
 			} else {
@@ -400,7 +399,7 @@ public class SemanticAnalyzer {
 					return;
 				} else {
 					System.out.println("Retorno incompatível com declaração");
-					addSemanticError("Retorno incompatível com declaração");
+					addSemanticError("Retorno incompatível com declaração", forth.getRow());
 					return;
 				}
 			}
@@ -412,7 +411,7 @@ public class SemanticAnalyzer {
 			
 			} else {
 					System.out.println("Retorno incompatível com declaração");
-					addSemanticError("Retorno incompatível com declaração");
+					addSemanticError("Retorno incompatível com declaração", forth.getRow());
 					return;
 			}
 			
@@ -424,7 +423,7 @@ public class SemanticAnalyzer {
 			
 			} else {
 				System.out.println("Retorno incompatível com declaração");
-				addSemanticError("Retorno incompatível com declaração");
+				addSemanticError("Retorno incompatível com declaração", forth.getRow());
 				return;
 			}
 			
@@ -445,7 +444,7 @@ public class SemanticAnalyzer {
 		
 		if(symbolClass.getHeritage() != null) {
 			if(SemanticAnalyzer.table.size() == 1) {
-				addSemanticError("Classe utilizada em herança não foi declarada. Linha: " + symbolClass.getHeritage().getRow());
+				addSemanticError("Classe utilizada em herança não foi declarada.", symbolClass.getHeritage().getRow());
 			} else {
 				Iterator<SymbolClass> i = SemanticAnalyzer.table.iterator();
 				SymbolClass fatherSymbol;
@@ -462,7 +461,7 @@ public class SemanticAnalyzer {
 				}
 				
 				if(!found) {
-					addSemanticError("Classe utilizada em herança não foi declarada. Linha: " + symbolClass.getHeritage().getRow());
+					addSemanticError("Classe utilizada em herança não foi declarada.", symbolClass.getHeritage().getRow());
 				}
 			}
 		}
@@ -480,7 +479,7 @@ public class SemanticAnalyzer {
 			symbol = i.next();
 			
 			if(fatherNames.contains(symbol.getName().getValue())) {
-				addSemanticError("Atributo já foi definido na classe pai. Linha: " + symbol.getName().getRow());
+				addSemanticError("Atributo já foi definido na classe pai.", symbol.getName().getRow());
 			} else {
 				result.add(symbol);
 			}
@@ -517,7 +516,7 @@ public class SemanticAnalyzer {
 				if(symbolF.getName().getValue().equals(symbolS.getName().getValue())) {
 					if(symbolF.getType().getValue().equals(symbolS.getType().getValue())) {
 						if(symbolF.getParameters().equals(symbolS.getParameters())) {
-							addSemanticError("Método já definido na classe pai. Linha: " + symbolS.getName().getRow());
+							addSemanticError("Método já definido na classe pai.", symbolS.getName().getRow());
 							continue;
 						}
 					}
@@ -541,7 +540,7 @@ public class SemanticAnalyzer {
 		System.out.println("IsThereReturn " + Analyzer.thereIsReturn);
 		if(!(type.getValue().equals("void")) && (!(Analyzer.thereIsReturn)) ) {
 			System.out.println("Retorno esperado do tipo " + type.getValue());
-			addSemanticError("Retorno esperado do tipo " + type.getValue());
+			addSemanticError("Retorno esperado do tipo " + type.getValue(), TokensFlow.back().getRow());
 			return;
 		}
 		
