@@ -87,6 +87,7 @@ public class SemanticAnalyzer {
 	
 	public static void addSemanticError(String erro) {
 		semanticErrors.add("Erro semântico " + erro + " na linha " + TokensFlow.getToken().getRow());
+		System.out.println("Erro semântico " + erro + " na linha " + TokensFlow.getToken().getRow());
 	}
 	
 	public static void atribuitionChecker(SymbolConstant constante) {
@@ -536,7 +537,7 @@ public class SemanticAnalyzer {
 	 * @param type
 	 */
 	public static void returnRequiredChecker(Token type) {
-		System.out.println("Tipo no return required checker " + type.getValue());
+		System.out.println("Tipo do return required checker " + type.getValue());
 		System.out.println("IsThereReturn " + Analyzer.thereIsReturn);
 		if(!(type.getValue().equals("void")) && (!(Analyzer.thereIsReturn)) ) {
 			System.out.println("Retorno esperado do tipo " + type.getValue());

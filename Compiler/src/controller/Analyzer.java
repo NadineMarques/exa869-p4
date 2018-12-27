@@ -222,7 +222,6 @@ public class Analyzer {
 						First.check("Commands", TokensFlow.getToken()) ||
 						TokensFlow.getToken().getValue().equals("}") ||
 						First.check("MoreMethods", TokensFlow.getToken())) {
-
 						break;
 					}
 					
@@ -257,8 +256,6 @@ public class Analyzer {
 							TokensFlow.getToken().getValue().equals("}") ||
 							First.check("MoreMethods", TokensFlow.getToken())) {
 							
-						
-
 							break;
 					}
 					
@@ -327,7 +324,7 @@ public class Analyzer {
 								First.check("Commands", TokensFlow.getToken()) ||
 								TokensFlow.getToken().getValue().equals("}") ||
 								First.check("MoreMethods", TokensFlow.getToken())) {
-							
+								
 					
 								break;
 						}
@@ -353,17 +350,15 @@ public class Analyzer {
 						return;
 					}
 				}
+				
+				
 
 				if(TokensFlow.hasNext() && First.check("VariableDeclaration", TokensFlow.getToken())) {
-
+					
 					analiseVariableDeclaration();
 					
 					if(TokensFlow.hasNext() && First.check("Commands", TokensFlow.getToken())) {
-						
-			
-						
 						analiseCommands();
-						
 						if(Analyzer.type!=null) {
 							SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
 						}
@@ -374,6 +369,11 @@ public class Analyzer {
 							if(TokensFlow.isEmpty()) {
 								return;
 							}
+							
+							if(Analyzer.type!=null) {
+								SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+							}
+							Analyzer.type = null;
 							
 							while(TokensFlow.hasNext()) {
 								if(First.check("MoreMethods", TokensFlow.getToken())) {
@@ -394,6 +394,11 @@ public class Analyzer {
 								return;
 							}
 						}
+						
+						if(Analyzer.type!=null) {
+							SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+						}
+						Analyzer.type = null;
 						
 						if(TokensFlow.hasNext() && First.check("MoreMethods", TokensFlow.getToken())) {
 							AnalyzerSecondary.analiseMoreMethods();
@@ -408,6 +413,11 @@ public class Analyzer {
 								return;
 							}
 							
+							if(Analyzer.type!=null) {
+								SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+							}
+							Analyzer.type = null;
+							
 							while(TokensFlow.hasNext()) {
 								if(First.check("MoreMethods", TokensFlow.getToken())) {
 									break;
@@ -426,6 +436,11 @@ public class Analyzer {
 								return;
 							}
 						}
+						
+						if(Analyzer.type!=null) {
+							SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+						}
+						Analyzer.type = null;
 						
 						if(TokensFlow.hasNext() && First.check("MoreMethods", TokensFlow.getToken())) {
 							AnalyzerSecondary.analiseMoreMethods();
@@ -449,6 +464,11 @@ public class Analyzer {
 							return;
 						}
 						
+						if(Analyzer.type!=null) {
+							SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+						}
+						Analyzer.type = null;
+						
 						while(TokensFlow.hasNext()) {
 							if(First.check("MoreMethods", TokensFlow.getToken())) {
 								break;
@@ -468,6 +488,12 @@ public class Analyzer {
 							return;
 						}
 					}
+					
+					if(Analyzer.type!=null) {
+						SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+					}
+					Analyzer.type = null;
+					
 					if(TokensFlow.hasNext() && First.check("MoreMethods", TokensFlow.getToken())) {
 						AnalyzerSecondary.analiseMoreMethods();
 						return;
@@ -480,6 +506,11 @@ public class Analyzer {
 							return;
 						}
 						
+						if(Analyzer.type!=null) {
+							SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+						}
+						Analyzer.type = null;
+						
 						while(TokensFlow.hasNext()) {
 							if(First.check("MoreMethods", TokensFlow.getToken())) {
 								break;
@@ -499,6 +530,11 @@ public class Analyzer {
 							return;
 						}
 					}
+					
+					if(Analyzer.type!=null) {
+						SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+					}
+					Analyzer.type = null;
 					
 					if(TokensFlow.hasNext() && First.check("MoreMethods", TokensFlow.getToken())) {
 						AnalyzerSecondary.analiseMoreMethods();
@@ -579,10 +615,8 @@ public class Analyzer {
 
 				if(TokensFlow.hasNext() && First.check("VariableDeclaration", TokensFlow.getToken())) { 
 					analiseVariableDeclaration();
+					
 					if(TokensFlow.hasNext() && First.check("Commands", TokensFlow.getToken())) {
-						
-			
-						
 						analiseCommands();
 						
 						if(Analyzer.type!=null) {
@@ -594,6 +628,11 @@ public class Analyzer {
 							if(TokensFlow.isEmpty()) {
 								return;
 							}
+							
+							if(Analyzer.type!=null) {
+								SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+							}
+							Analyzer.type = null;
 							
 							while(TokensFlow.hasNext()) {
 								if(First.check("MoreMethods", TokensFlow.getToken())) {
@@ -615,6 +654,11 @@ public class Analyzer {
 							}
 						}
 						
+						if(Analyzer.type!=null) {
+							SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+						}
+						Analyzer.type = null;
+						
 						if(TokensFlow.hasNext() && First.check("MoreMethods", TokensFlow.getToken())) {
 							AnalyzerSecondary.analiseMoreMethods();
 							return;
@@ -627,6 +671,11 @@ public class Analyzer {
 							if(TokensFlow.isEmpty()) {
 								return;
 							}
+							
+							if(Analyzer.type!=null) {
+								SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+							}
+							Analyzer.type = null;
 							
 							while(TokensFlow.hasNext()) {
 								if(First.check("MoreMethods", TokensFlow.getToken()) ||
@@ -651,6 +700,11 @@ public class Analyzer {
 							}
 						}
 						
+						if(Analyzer.type!=null) {
+							SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+						}
+						Analyzer.type = null;
+						
 						if(TokensFlow.hasNext() && First.check("Commands", TokensFlow.getToken())) {
 		
 							analiseCommands();
@@ -664,6 +718,11 @@ public class Analyzer {
 								if(TokensFlow.isEmpty()) {
 									return;
 								}
+								
+								if(Analyzer.type!=null) {
+									SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+								}
+								Analyzer.type = null;
 								
 								while(TokensFlow.hasNext()) {
 									if(First.check("MoreMethods", TokensFlow.getToken())) {
@@ -684,6 +743,12 @@ public class Analyzer {
 									return;
 								}
 							}
+							
+							if(Analyzer.type!=null) {
+								SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+							}
+							Analyzer.type = null;
+							
 							if(TokensFlow.hasNext() && First.check("MoreMethods", TokensFlow.getToken())) {
 								AnalyzerSecondary.analiseMoreMethods();
 								return;
@@ -691,6 +756,11 @@ public class Analyzer {
 								return;
 							}
 						}
+						
+						if(Analyzer.type!=null) {
+							SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+						}
+						Analyzer.type = null;
 						
 						if(TokensFlow.hasNext() && First.check("MoreMethods", TokensFlow.getToken())) {
 							AnalyzerSecondary.analiseMoreMethods();
@@ -714,6 +784,11 @@ public class Analyzer {
 							return;
 						}
 						
+						if(Analyzer.type!=null) {
+							SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+						}
+						Analyzer.type = null;
+						
 						while(TokensFlow.hasNext()) {
 							if(First.check("MoreMethods", TokensFlow.getToken())) {
 								break;
@@ -733,6 +808,12 @@ public class Analyzer {
 							return;
 						}
 					}
+					
+					if(Analyzer.type!=null) {
+						SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+					}
+					Analyzer.type = null;
+					
 					if(TokensFlow.hasNext() && First.check("MoreMethods", TokensFlow.getToken())) {
 						AnalyzerSecondary.analiseMoreMethods();
 						return;
@@ -745,6 +826,11 @@ public class Analyzer {
 						if(TokensFlow.isEmpty()) {
 							return;
 						}
+						
+						if(Analyzer.type!=null) {
+							SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+						}
+						Analyzer.type = null;
 						
 						while(TokensFlow.hasNext()) {
 							if(First.check("MoreMethods", TokensFlow.getToken()) ||
@@ -769,6 +855,11 @@ public class Analyzer {
 						}
 					}
 					
+					if(Analyzer.type!=null) {
+						SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+					}
+					Analyzer.type = null;
+					
 					if(TokensFlow.hasNext() && First.check("Commands", TokensFlow.getToken())) {
 						analiseCommands();
 						
@@ -781,6 +872,11 @@ public class Analyzer {
 							if(TokensFlow.isEmpty()) {
 								return;
 							}
+							
+							if(Analyzer.type!=null) {
+								SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+							}
+							Analyzer.type = null;
 							
 							while(TokensFlow.hasNext()) {
 								if(First.check("MoreMethods", TokensFlow.getToken())) {
@@ -801,6 +897,12 @@ public class Analyzer {
 								return;
 							}
 						}
+
+						if(Analyzer.type!=null) {
+							SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+						}
+						Analyzer.type = null;
+						
 						if(TokensFlow.hasNext() && First.check("MoreMethods", TokensFlow.getToken())) {
 							AnalyzerSecondary.analiseMoreMethods();
 							return;
@@ -808,6 +910,11 @@ public class Analyzer {
 							return;
 						}
 					}
+					
+					if(Analyzer.type!=null) {
+						SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+					}
+					Analyzer.type = null;
 					
 					if(TokensFlow.hasNext() && First.check("MoreMethods", TokensFlow.getToken())) {
 						AnalyzerSecondary.analiseMoreMethods();
@@ -819,15 +926,20 @@ public class Analyzer {
 			}
 		} else {
 			while(TokensFlow.hasNext()) {
+				
+				if(Analyzer.type!=null) {
+					SemanticAnalyzer.returnRequiredChecker(Analyzer.type);
+				}
+				Analyzer.type = null;
+				
 				if(First.check("MoreMethods", TokensFlow.getToken())) {
 					break;
 				}
-				
 				TokensFlow.next();
 			}
 			
 			return;
-		}		
+		}
 		
 	}
 	

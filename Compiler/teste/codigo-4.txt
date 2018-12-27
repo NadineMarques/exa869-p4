@@ -23,6 +23,7 @@ class Cliente extends Pessoa{
 	   variables {
 	   	int k[2];
 	   }
+
    }
 
    
